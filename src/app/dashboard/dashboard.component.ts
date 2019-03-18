@@ -8,6 +8,8 @@ import { DialogComponent } from './dialog/dialog.component';
 
 export interface DialogData {
     name: string;
+    siteId: number;
+    contractorId: number;
 }
 export interface ISiteData {
     location: string;
