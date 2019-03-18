@@ -28,7 +28,7 @@ export class DashboardService {
     }
 
     private extractDataRes(res: Response) {
-        let body = res;
+        const body = res;
         return body || {};
     }
 
@@ -58,9 +58,9 @@ export class DashboardService {
         return this.http.get(`${SERVICE_BASE_URL}/sites`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
-                alert("Something went wrong. Please try again later.")
+                alert('Something went wrong. Please try again later.');
                 return err;
             })
-        )
+        );
     }
 }

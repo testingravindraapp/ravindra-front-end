@@ -2,18 +2,18 @@
         <!-- <img [src]="data.name" class="image-data"> -->
         <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig">
                 <div ngxSlickItem *ngFor="let slide of data.name" class="slide">
-                      <img src="{{ slide }}" alt="" class="image-data">
+                        <img src="{{ slide }}" alt="" class="image-data">
                 </div>
-            </ngx-slick>
+        </ngx-slick>
         <div class="site-details">
-                <span>
+                <mat-card class="card">
                         Site Id: {{data.siteId}}
-                </span>
-                <span>
+                </mat-card>
+                <mat-card class="card">
                         Site Name: {{data.location}}
-                </span>
-                <span>
+                </mat-card>
+                <mat-card class="card">
                         Contractor Id: {{data.contractorId}}
-                </span>
+                </mat-card>
         </div>
 </div>

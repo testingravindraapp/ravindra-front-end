@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 
-export interface DialogData {
+export interface IDialogData {
     name: string;
     siteId: number;
     contractorId: number;
@@ -40,10 +40,10 @@ export interface ISiteData {
 })
 export class DashboardComponent implements OnInit {
     displayedColumns: string[] = ['siteId', 'location', 'contractorId', 'submittedOn', 'image'];
-    dataSource: MatTableDataSource<any>;
+    dataSource: MatTableDataSource<ISiteData>;
     showInput: Boolean = false;
     newSite: ISiteData;
-    tmpdata: any;
+    tmpdata: ISiteData[];
     selected = '';
     @ViewChild(MatSort) sort: MatSort;
 
@@ -70,19 +70,17 @@ export class DashboardComponent implements OnInit {
                 this.tmpdata = data;
                 this.dataSource = new MatTableDataSource(data);
                 this.dataSource.sort = this.sort;
-                this.dataSource.filterPredicate = 
-                (dataX: any, filtersJson: string) => {
+                this.dataSource.filterPredicate = (dataX: any, filtersJson: string) => {
                     const matchFilter = [];
                     const filters = JSON.parse(filtersJson);
-              
                     filters.forEach(filter => {
-                      const val = dataX[filter.id] === null ? '' : dataX[filter.id];
-                      if (val !== undefined){
-                        matchFilter.push(val.toLowerCase().includes(filter.value.toLowerCase()));
-                      }
+                        const val = dataX[filter.id] === null ? '' : dataX[filter.id];
+                        if (val !== undefined) {
+                            matchFilter.push(val.toLowerCase().includes(filter.value.toLowerCase()));
+                        }
                     });
-                      return matchFilter.every(Boolean);
-                  };
+                    return matchFilter.every(Boolean);
+                };
             })
         ).subscribe();
     }
@@ -91,8 +89,8 @@ export class DashboardComponent implements OnInit {
         if (filterValue !== '') {
             const tableFilters = [];
             tableFilters.push({
-              id: this.selected,
-              value: filterValue
+                id: this.selected,
+                value: filterValue
             });
             // this.dataSource.filter = filterValue.trim().toLowerCase();
             this.dataSource.filter = JSON.stringify(tableFilters);
@@ -102,7 +100,6 @@ export class DashboardComponent implements OnInit {
         } else {
             this.dataSource.filter = '';
         }
-      
     }
 
     openDialog(elem): void {
@@ -122,7 +119,7 @@ export class DashboardComponent implements OnInit {
     }
     addNewEntry() {
         if (this.newSite.siteId !== null && this.newSite.contractorId !== null && this.newSite.location !== '') {
-            this.tmpdata.unshift({ siteId: this.newSite.siteId, contractorId: this.newSite.contractorId, location: this.newSite.location, status: 'Open' });
+            this.tmpdata.unshift({ siteId: this.newSite.siteId, contractorId: this.newSite.contractorId, location: this.newSite.location, image: null, status: 'Open', submittedOn: null });
             this.dataSource = new MatTableDataSource(this.tmpdata);
             this.newSite = {
                 location: '',

@@ -9,12 +9,15 @@
  margin-left: 80px;
 }
 .site-details {
+    display: flex;
+    flex-flow: row wrap;
     position: fixed;
-    bottom: 15%;
+    bottom: 12%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.site-details span {
+.card {
+    border-left: 1px solid grey;
     margin-right: 15px;
     color: rgb(87, 87, 87);
 }
