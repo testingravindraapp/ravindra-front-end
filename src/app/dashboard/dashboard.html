@@ -15,7 +15,7 @@
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort >
 
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
@@ -23,19 +23,19 @@
     <!-- Position Column -->
 
     <ng-container matColumnDef="siteId" class="site-id">
-        <mat-header-cell *matHeaderCellDef> Site Id </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Site Id </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.siteId}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="location">
-        <mat-header-cell *matHeaderCellDef> Site Name </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Site Name </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.location}} </mat-cell>
     </ng-container>
 
 
     <!-- Name Column -->
     <ng-container matColumnDef="contractorId">
-        <mat-header-cell *matHeaderCellDef> Contractor Id </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Contractor Id </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.contractorId}} </mat-cell>
     </ng-container>
 
@@ -47,14 +47,14 @@
     </ng-container>
 
     <ng-container matColumnDef="submittedOn">
-        <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Submitted On </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.submittedOn}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef> Images </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <img *ngFor="let item of element.imageURL" [src]="item" class="images" (click)="openDialog($event)">
+            <img *ngFor="let item of element.imageURL" [src]="item" class="images" (click)="openDialog(element)">
             <!-- <angular-image-slider [images]="element.imageURL"></angular-image-slider> -->
         </mat-cell>
 

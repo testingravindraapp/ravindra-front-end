@@ -3,12 +3,13 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { DialogData } from '../dashboard.component';
 
 @Component({
-    selector: 'dialog-overview-example-dialog',
+    selector: 'dialog-modal',
     templateUrl: 'dialog.html',
     styleUrls: ['./dialog.css']
   })
   export class DialogComponent {
-  
+    slideConfig = {"slidesToShow": 1, "slidesToScroll": 1};
+
     constructor(
       public dialogRef: MatDialogRef<DialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: DialogData) {}

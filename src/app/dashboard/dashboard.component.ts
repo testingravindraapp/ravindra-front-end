@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { DashboardService } from '../services/dashboard.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
+import { MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 
 export interface DialogData {
@@ -42,6 +42,8 @@ export class DashboardComponent implements OnInit {
     newSite: ISiteData;
     tmpdata: any;
 
+    @ViewChild(MatSort) sort: MatSort;
+
     constructor(private dashboardService: DashboardService, public dialog: MatDialog) {
         this.newSite = {
             location: '',
@@ -64,6 +66,7 @@ export class DashboardComponent implements OnInit {
                 });
                 this.tmpdata = data;
                 this.dataSource = new MatTableDataSource(data);
+                this.dataSource.sort = this.sort;
             })
         ).subscribe();
     }
@@ -76,14 +79,14 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    openDialog(event): void {
+    openDialog(elem): void {
         console.log(event);
         // let elem: Array<string> = event.target.src.split('/');
         // console.log(elem[elem.length - 1]);
         const dialogRef = this.dialog.open(DialogComponent, {
             width: '600px',
-            height: '600px',
-            data: { name: event.target.src }
+            height: '650px',
+            data: { name: elem.imageURL, siteId: elem.siteId, location: elem.location, contractorId: elem.contractorId }
         });
 
         dialogRef.afterClosed().subscribe(result => {

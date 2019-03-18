@@ -11,6 +11,7 @@ table {
 } */
 .mat-column-siteId {
   flex: 0 0 100px;
+
 }
 .mat-column-location {
     flex: 0 0 300px;

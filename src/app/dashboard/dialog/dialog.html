@@ -1,3 +1,19 @@
 <div class="container">
-        <img [src]="data.name" class="image-data">
+        <!-- <img [src]="data.name" class="image-data"> -->
+        <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" (afterChange)="afterChange($event)">
+                <div ngxSlickItem *ngFor="let slide of data.name" class="slide">
+                      <img src="{{ slide }}" alt="" class="image-data">
+                </div>
+            </ngx-slick>
+        <div class="site-details">
+                <span>
+                        Site Id: {{data.siteId}}
+                </span>
+                <span>
+                        Site Name: {{data.location}}
+                </span>
+                <span>
+                        Contractor Id: {{data.contractorId}}
+                </span>
+        </div>
 </div>

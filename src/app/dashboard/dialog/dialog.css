@@ -1,7 +1,20 @@
-.image-data {
+/* .image-data {
     position: fixed;
-    top: 50%;
+    top: 45%;
     left: 50%;
-    /* bring your own prefixes */
+   
     transform: translate(-50%, -50%);
+} */
+.image-data {
+ margin-left: 80px;
+}
+.site-details {
+    position: fixed;
+    bottom: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.site-details span {
+    margin-right: 15px;
+    color: rgb(87, 87, 87);
 }

@@ -11,13 +11,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardService } from './services/dashboard.service';
 import { DialogComponent } from './dashboard/dialog/dialog.component';
 
-// import { SliderModule } from 'angular-image-slider';
+import { SliderModule } from 'angular-image-slider';
+import { SlickModule } from 'ngx-slick';
 
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-
+import {MatSortModule} from '@angular/material/sort';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,10 @@ import {MatButtonModule} from '@angular/material/button';
     MatTableModule,
     MatDialogModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSortModule,
+    SliderModule,
+    SlickModule.forRoot()
   ],
   providers: [DashboardService],
   bootstrap: [AppComponent],
