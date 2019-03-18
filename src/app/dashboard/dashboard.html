@@ -1,0 +1,65 @@
+<mat-form-field *ngIf="showInput" class="input-new">
+    <input matInput [(ngModel)]="newSite.siteId" placeholder="Site Id" type="number" required>
+</mat-form-field>
+<mat-form-field *ngIf="showInput" class="input-new">
+    <input matInput [(ngModel)]="newSite.location" placeholder="Site Name" required>
+</mat-form-field>
+<mat-form-field *ngIf="showInput" class="input-new">
+    <input matInput [(ngModel)]="newSite.contractorId" placeholder="Contractor Id" type="number" required>
+</mat-form-field>
+<button *ngIf="showInput" mat-raised-button (click)="addNewEntry()">Add</button>
+
+<button *ngIf="!showInput" mat-raised-button (click)="showInput=true;">Add new site</button>
+<hr>
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+
+    <ng-container matColumnDef="siteId" class="site-id">
+        <mat-header-cell *matHeaderCellDef> Site Id </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.siteId}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="location">
+        <mat-header-cell *matHeaderCellDef> Site Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.location}} </mat-cell>
+    </ng-container>
+
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="contractorId">
+        <mat-header-cell *matHeaderCellDef> Contractor Id </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.contractorId}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+
+    <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="submittedOn">
+        <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.submittedOn}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="image">
+        <mat-header-cell *matHeaderCellDef> Images </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <img *ngFor="let item of element.imageURL" [src]="item" class="images" (click)="openDialog($event)">
+            <!-- <angular-image-slider [images]="element.imageURL"></angular-image-slider> -->
+        </mat-cell>
+
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
