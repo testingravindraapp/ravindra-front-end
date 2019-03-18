@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
     showInput: Boolean = false;
     newSite: ISiteData;
     tmpdata: any;
-
+    selected = '';
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private dashboardService: DashboardService, public dialog: MatDialog) {
@@ -70,16 +70,39 @@ export class DashboardComponent implements OnInit {
                 this.tmpdata = data;
                 this.dataSource = new MatTableDataSource(data);
                 this.dataSource.sort = this.sort;
+                this.dataSource.filterPredicate = 
+                (dataX: any, filtersJson: string) => {
+                    const matchFilter = [];
+                    const filters = JSON.parse(filtersJson);
+              
+                    filters.forEach(filter => {
+                      const val = dataX[filter.id] === null ? '' : dataX[filter.id];
+                      if (val !== undefined){
+                        matchFilter.push(val.toLowerCase().includes(filter.value.toLowerCase()));
+                      }
+                    });
+                      return matchFilter.every(Boolean);
+                  };
             })
         ).subscribe();
     }
 
     applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
+        if (filterValue !== '') {
+            const tableFilters = [];
+            tableFilters.push({
+              id: this.selected,
+              value: filterValue
+            });
+            // this.dataSource.filter = filterValue.trim().toLowerCase();
+            this.dataSource.filter = JSON.stringify(tableFilters);
+            // if (this.dataSource.paginator) {
+            //     this.dataSource.paginator.firstPage();
+            // }
+        } else {
+            this.dataSource.filter = '';
         }
+      
     }
 
     openDialog(elem): void {

@@ -11,6 +11,13 @@
 
 <button *ngIf="!showInput" mat-raised-button (click)="showInput=true;">Add new site</button>
 <hr>
+<mat-form-field class="filter-select">
+    <mat-select placeholder="Select Column to filter" [(value)]="selected">
+      <mat-option *ngFor="let item of [ {value: 'siteId', viewValue: 'Site Id'}, {value: 'location', viewValue: 'Site Name'}, {value: 'contractorId', viewValue: 'Contractor Id'}]" [value]="item.value" >
+        {{item.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 <mat-form-field>
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>

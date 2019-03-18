@@ -19,6 +19,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSortModule} from '@angular/material/sort';
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,8 @@ import {MatSortModule} from '@angular/material/sort';
     MatButtonModule,
     MatSortModule,
     SliderModule,
-    SlickModule.forRoot()
+    SlickModule.forRoot(),
+    MatSelectModule
   ],
   providers: [DashboardService],
   bootstrap: [AppComponent],
