@@ -10,6 +10,7 @@ export interface DialogData {
     name: string;
     siteId: number;
     contractorId: number;
+    location: string;
 }
 export interface ISiteData {
     location: string;
