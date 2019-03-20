@@ -1,31 +1,22 @@
 import { Injectable } from '@angular/core';
-import {
-    HttpClient, HttpHeaders
-} from '@angular/common/http';
-
-import {
-    Router,
-    Event,
-    NavigationStart
-} from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router, Event, NavigationStart } from '@angular/router';
 
 import { Observable, BehaviorSubject, pipe } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
+
 import { SERVICE_BASE_URL } from './util/constants';
 
-
+import { ISiteData } from '../interfaces/site';
 @Injectable()
 export class DashboardService {
-
-    // private accountOpeningFormType = 'aop';
-    // private folioApiServices: FolioApiServices;
-    // private loginSub: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+    };
 
     constructor(protected http: HttpClient,
         private router: Router
-    ) {
-
-    }
+    ) { }
 
     private extractDataRes(res: Response) {
         const body = res;
@@ -56,6 +47,101 @@ export class DashboardService {
     public getAllSites(): Observable<any> {
         console.log('getAllSites............................');
         return this.http.get(`${SERVICE_BASE_URL}/sites`, {}).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+    public getActiveSites(): Observable<any> {
+        console.log('getActiveSites............................');
+        return this.http.get(`${SERVICE_BASE_URL}/activeSites`, {}).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+    public getArchivedSites(): Observable<any> {
+        console.log('getArchivedSites............................');
+        return this.http.get(`${SERVICE_BASE_URL}/archivedSites`, {}).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+    public updateArchive(arrId, archived): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('id', arrId);
+        body.set('archived', archived);
+
+        console.log('updateArchive............................');
+        return this.http.put(`${SERVICE_BASE_URL}/updateArchive`, body.toString(), this.options).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+
+    public getContractors(): Observable<any> {
+        console.log('getContractors............................');
+        return this.http.get(`${SERVICE_BASE_URL}/contractors`, {}).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+    public addContractors(contractorId, name): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('contractorId', contractorId);
+        body.set('name', name);
+
+        console.log('addContractors............................');
+        return this.http.put(`${SERVICE_BASE_URL}/addContractors`, body.toString(), this.options).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+    public delContractors(id): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('id', id);
+
+        console.log('deleteContractors............................');
+        return this.http.post(`${SERVICE_BASE_URL}/deleteContractors`, body.toString(), this.options).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
+
+    public createNewSite(newSite: ISiteData): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('location', newSite.location);
+        body.set('siteId', newSite.siteId.toString());
+        body.set('contractorId', newSite.contractorId.toString());
+        body.set('lat_Long_True', newSite.lat_Long_True);
+
+        console.log('createNewSite............................');
+        return this.http.post(`${SERVICE_BASE_URL}/createNewSite`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');

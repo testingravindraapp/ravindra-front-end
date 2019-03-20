@@ -1,0 +1,23 @@
+h3 {
+    display: inline-block;
+}
+.add-btn {
+    cursor: pointer;
+    vertical-align: middle;
+}
+.input-new {
+    margin-right: 10px;
+}
+.cont-item {
+    display: flex;
+    align-items : center;
+}
+.text-cont {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0 10px;
+    /* vertical-align: middle; */
+}
+.delete-btn {
+    cursor: pointer;
+}

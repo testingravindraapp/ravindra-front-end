@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { IDialogData } from '../dashboard.component';
+import { IDialogData } from '../../interfaces/site';
 
 @Component({
   selector: 'app-dialog-modal',

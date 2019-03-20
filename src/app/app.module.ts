@@ -5,27 +5,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
+import { AppMaterialModule } from './app-material/app-material.module';
+
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { DashboardService } from './services/dashboard.service';
 import { DialogComponent } from './dashboard/dialog/dialog.component';
+import { ArchiveDialogComponent } from './dashboard/archive-data/archive.component';
+import { ContractorDialogComponent } from './dashboard/contractor/contractor.component';
 
-import { SliderModule } from 'angular-image-slider';
 import { SlickModule } from 'ngx-slick';
 
-import {MatTableModule} from '@angular/material/table';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSortModule} from '@angular/material/sort';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCardModule} from '@angular/material/card';
+
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    DialogComponent
+    DialogComponent,
+    ArchiveDialogComponent,
+    ContractorDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -33,20 +32,15 @@ import {MatCardModule} from '@angular/material/card';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    MatTableModule,
-    MatDialogModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSortModule,
-    SliderModule,
+    AppMaterialModule,
     SlickModule.forRoot(),
-    MatSelectModule,
-    MatCardModule
   ],
   providers: [DashboardService],
   bootstrap: [AppComponent],
   entryComponents: [
-    DialogComponent
+    DialogComponent,
+    ArchiveDialogComponent,
+    ContractorDialogComponent
   ]
 })
 

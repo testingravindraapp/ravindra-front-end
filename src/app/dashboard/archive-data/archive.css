@@ -1,0 +1,26 @@
+table {
+  width: 100%;
+}
+.archive-btn {
+  margin-bottom: 10px;
+}
+.images {
+  margin-right: 10px;
+  height: 80px;
+}
+
+.mat-column-siteId {
+  flex: 0 0 100px;
+}
+
+.mat-column-location {
+  flex: 0 0 300px;
+}
+
+.mat-column-contractorId {
+  flex: 0 0 100px;
+}
+
+.mat-column-submittedOn {
+  flex: 0 0 150px;
+}
