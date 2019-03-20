@@ -1,6 +1,5 @@
 export interface ISiteData {
     _id?: string;
-    position: number;
     location: string;
     siteId: number;
     contractorId: number;
