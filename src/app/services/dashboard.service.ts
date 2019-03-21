@@ -5,7 +5,7 @@ import { Router, Event, NavigationStart } from '@angular/router';
 import { Observable, BehaviorSubject, pipe } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
 
-import { SERVICE_BASE_URL } from './util/constants';
+import { AppSettings } from './util/constants';
 
 import { ISiteData } from '../interfaces/site';
 @Injectable()
@@ -46,7 +46,7 @@ export class DashboardService {
 
     public getAllSites(): Observable<any> {
         console.log('getAllSites............................');
-        return this.http.get(`${SERVICE_BASE_URL}/sites`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/sites`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -57,7 +57,7 @@ export class DashboardService {
 
     public getActiveSites(): Observable<any> {
         console.log('getActiveSites............................');
-        return this.http.get(`${SERVICE_BASE_URL}/activeSites`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/activeSites`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -68,7 +68,7 @@ export class DashboardService {
 
     public getArchivedSites(): Observable<any> {
         console.log('getArchivedSites............................');
-        return this.http.get(`${SERVICE_BASE_URL}/archivedSites`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/archivedSites`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -83,7 +83,7 @@ export class DashboardService {
         body.set('archived', archived);
 
         console.log('updateArchive............................');
-        return this.http.put(`${SERVICE_BASE_URL}/updateArchive`, body.toString(), this.options).pipe(
+        return this.http.put(`${AppSettings.SERVICE_BASE_URL}/updateArchive`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -95,7 +95,7 @@ export class DashboardService {
 
     public getContractors(): Observable<any> {
         console.log('getContractors............................');
-        return this.http.get(`${SERVICE_BASE_URL}/contractors`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/contractors`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -110,7 +110,7 @@ export class DashboardService {
         body.set('name', name);
 
         console.log('addContractors............................');
-        return this.http.put(`${SERVICE_BASE_URL}/addContractors`, body.toString(), this.options).pipe(
+        return this.http.put(`${AppSettings.SERVICE_BASE_URL}/addContractors`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -124,7 +124,7 @@ export class DashboardService {
         body.set('id', id);
 
         console.log('deleteContractors............................');
-        return this.http.post(`${SERVICE_BASE_URL}/deleteContractors`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/deleteContractors`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -141,7 +141,7 @@ export class DashboardService {
         body.set('lat_Long_True', newSite.lat_Long_True);
 
         console.log('createNewSite............................');
-        return this.http.post(`${SERVICE_BASE_URL}/createNewSite`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/createNewSite`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');

@@ -17,6 +17,7 @@ import { DashboardService } from '../services/dashboard.service';
 import { ISiteData } from '../interfaces/site';
 import { IContractor } from '../interfaces/contractor';
 
+import { NgxUiLoaderService } from 'ngx-ui-loader'; 
 
 @Component({
     selector: 'app-dashboard',
@@ -40,7 +41,8 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
     constructor(private dashboardService: DashboardService,
         private archiveDataService: ArchiveDataService,
         public dialog: MatDialog,
-        private snackBar: MatSnackBar) {
+        private snackBar: MatSnackBar,
+        private ngxService: NgxUiLoaderService) {
         this.contractorsList = [];
         this.newSite = {
             location: '',
@@ -54,6 +56,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
     }
 
     ngOnInit() {
+        this.ngxService.startLoader('loader-01');
         this.archiveDataService.currentSiteData.subscribe(message => {
             if (this.dataSource) {
                 const data: ISiteData[] = this.dataSource.data;
@@ -96,6 +99,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
                     });
                     return matchFilter.every(Boolean);
                 };
+                this.ngxService.stopLoader('loader-01');
             })
         ).subscribe();
 
@@ -233,7 +237,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
             }
             return !this.selection.isSelected(row);
         });
-        this.dashboardService.updateArchive(arrId, 'true');
+        this.dashboardService.updateArchive(arrId, 'true').subscribe();
         this.selection.clear();
     }
 

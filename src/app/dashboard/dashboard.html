@@ -20,7 +20,8 @@
             </mat-form-field>
             <button *ngIf="showInput" mat-raised-button (click)="addNewEntry()" class="add-new-site">Add</button>
             <span *ngIf="showInput" style="width:35%;"></span>
-            <button *ngIf="!showInput" mat-raised-button (click)="showInput=true;" class="add-new-site">Add new site</button>
+            <button *ngIf="!showInput" mat-raised-button (click)="showInput=true;" class="add-new-site">Add new
+                site</button>
 
             <button mat-raised-button (click)="getContractors()" class="btn-contractor">Contractors</button>
         </div>
@@ -40,7 +41,11 @@
         <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
         </mat-form-field>
+       
         <div class="mat-elevation-z8">
+                <div style="position: relative">
+                        <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
+                    </div>
             <table mat-table [dataSource]="dataSource" matSort>
                 <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>

@@ -16,7 +16,12 @@ import { ArchiveDialogComponent } from './dashboard/archive-data/archive.compone
 import { ContractorDialogComponent } from './dashboard/contractor/contractor.component';
 
 import { SlickModule } from 'ngx-slick';
+import { NgxUiLoaderModule, NgxUiLoaderConfig } from 'ngx-ui-loader';
 
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+  fgsColor: '#ffd740',
+  pbColor: '#ffd740'
+};
 
 @NgModule({
   declarations: [
@@ -34,6 +39,7 @@ import { SlickModule } from 'ngx-slick';
     FormsModule,
     AppMaterialModule,
     SlickModule.forRoot(),
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
   providers: [DashboardService],
   bootstrap: [AppComponent],

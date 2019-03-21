@@ -27,6 +27,7 @@
     "angular-image-slider": "0.0.8",
     "core-js": "^2.5.4",
     "ngx-slick": "^0.2.1",
+    "ngx-ui-loader": "^7.2.1",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "typescript": "~3.1.6",
