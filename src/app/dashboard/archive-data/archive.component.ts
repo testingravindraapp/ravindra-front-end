@@ -40,7 +40,7 @@ export class ArchiveDialogComponent implements OnInit, AfterContentChecked {
         this.dataSource.data = this.dataSource.data.filter(row => {
             return !this.selection.isSelected(row);
         });
-        this.dashboardService.updateArchive(arrId, 'false');
+        this.dashboardService.updateArchive(arrId, 'false').subscribe();
         this.dataService.changeSiteData(data);
         this.dataService.changeArchivedSiteData(this.dataSource.data);
     }
