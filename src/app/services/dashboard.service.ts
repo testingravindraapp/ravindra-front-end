@@ -98,7 +98,7 @@ export class DashboardService {
         body.set('siteName', siteName);
         body.set('latLong', latLong);
         body.set('cId', cId);
-        console.log('updateSiteData............................');
+        console.log('updateSiteData............................', body.toString());
         return this.http.put(`${AppSettings.SERVICE_BASE_URL}/updateSiteData`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {

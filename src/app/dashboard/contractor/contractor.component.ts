@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 
 import { IContractor } from '../../interfaces/contractor';
 
@@ -39,22 +39,23 @@ export class ContractorDialogComponent implements OnInit, OnDestroy {
                 .reduce((max, p) => p.contractorId > max ? p.contractorId : max, this.contractors[0][0].contractorId);
             this.newContr.contractorId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
         }
-
     }
 
     addContractor() {
         if (this.newContr.name !== '') {
             this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name).pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
+                map(result => {
+                    console.log(result);
+                    const data = this.contractors[0];
+                    data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId, _id: result._id });
+                    this.contractors[0] = data;
+                    this.newContr = {
+                        name: '',
+                        contractorId: Number(this.newContr.contractorId) + 1
+                    };
+                })
             ).subscribe();
-            const data = this.contractors[0];
-            data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId });
-            this.contractors[0] = data;
-            // this.showInput = false;
-            this.newContr = {
-                name: '',
-                contractorId: Number(this.newContr.contractorId) + 1
-            };
         }
     }
 

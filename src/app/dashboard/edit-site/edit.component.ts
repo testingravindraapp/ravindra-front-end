@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 
 import { ISiteData } from '../../interfaces/site';
 import { IContractor } from '../../interfaces/contractor';
@@ -29,9 +29,11 @@ export class EditSiteComponent implements OnDestroy {
       this.dashboardService.updateSiteData(this.data[0]._id,
         this.data[0].location, this.data[0].lat_Long_True,
         this.data[0].contractorId).pipe(
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
+            map(result => {
+                this.dialogRef.close();
+            })
         ).subscribe();
-      this.dialogRef.close();
     }
 
     ngOnDestroy() {
