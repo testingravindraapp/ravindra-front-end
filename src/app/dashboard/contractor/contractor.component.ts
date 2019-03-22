@@ -44,7 +44,6 @@ export class ContractorDialogComponent implements OnInit, OnDestroy {
     addContractor() {
         if (this.newContr.name !== '') {
             this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name).pipe(
-                takeUntil(this.unsubscribe),
                 map(result => {
                     console.log(result);
                     const data = this.contractors[0];
@@ -54,7 +53,8 @@ export class ContractorDialogComponent implements OnInit, OnDestroy {
                         name: '',
                         contractorId: Number(this.newContr.contractorId) + 1
                     };
-                })
+                }),
+                takeUntil(this.unsubscribe)
             ).subscribe();
         }
     }

@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
             }
         });
         this.dashboardService.getActiveSites().pipe(
-            takeUntil(this.unsubscribe),
+            
             map(data => {
                 data.map((item, index) => {
                     // item.position = index + 1;
@@ -120,11 +120,11 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
                     return matchFilter.every(Boolean);
                 };
                 this.ngxService.stopLoader('loader-01');
-            })
+            }),
+            takeUntil(this.unsubscribe)
         ).subscribe();
 
         this.dashboardService.getArchivedSites().pipe(
-            takeUntil(this.unsubscribe),
             map(data => {
                 data.map((item, index) => {
                     if (item.imageURL && item.imageURL !== '') {
@@ -136,7 +136,8 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
                     return b.siteId - a.siteId;
                 });
                 this.archiveData = data;
-            })
+            }),
+            takeUntil(this.unsubscribe)
         ).subscribe();
 
         this.dashboardService.getContractors().pipe(

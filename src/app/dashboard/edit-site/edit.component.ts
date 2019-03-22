@@ -29,10 +29,10 @@ export class EditSiteComponent implements OnDestroy {
       this.dashboardService.updateSiteData(this.data[0]._id,
         this.data[0].location, this.data[0].lat_Long_True,
         this.data[0].contractorId).pipe(
-            takeUntil(this.unsubscribe),
             map(result => {
                 this.dialogRef.close();
-            })
+            }),
+            takeUntil(this.unsubscribe)
         ).subscribe();
     }
 
