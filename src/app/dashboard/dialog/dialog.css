@@ -1,23 +1,23 @@
-/* .image-data {
-    position: fixed;
-    top: 45%;
-    left: 50%;
-   
-    transform: translate(-50%, -50%);
-} */
 .image-data {
- margin-left: 80px;
+    margin-left: 80px;
 }
-.site-details {
-    display: flex;
-    flex-flow: row wrap;
-    position: fixed;
-    bottom: 12%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+.arrow-left {
+    position: relative;
+    top: 280px;
+    z-index: 1;
+    cursor: pointer;
 }
-.card {
-    border-left: 1px solid grey;
-    margin-right: 15px;
-    color: rgb(87, 87, 87);
+
+.arrow-right {
+    position: relative;
+    top: 280px;
+    left: 490px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.container {
+    overflow-x: hidden;
+    padding-bottom: 10px;
 }

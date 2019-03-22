@@ -1,31 +1,32 @@
-import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterContentChecked, OnDestroy } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import { MatSort, MatDialog, MatSnackBar, MatPaginator, MatTableDataSource } from '@angular/material';
 
 import { DialogComponent } from './dialog/dialog.component';
 import { ArchiveDialogComponent } from './archive-data/archive.component';
 import { ContractorDialogComponent } from './contractor/contractor.component';
+import { LocateComponent } from './locate/locate.component';
+import { EditSiteComponent } from './edit-site/edit.component';
 
 import { ArchiveDataService } from '../services/archive-data.service';
 import { DashboardService } from '../services/dashboard.service';
 
-
 import { ISiteData } from '../interfaces/site';
 import { IContractor } from '../interfaces/contractor';
 
-import { NgxUiLoaderService } from 'ngx-ui-loader'; 
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.html',
     styleUrls: ['./dashboard.css'],
 })
-export class DashboardComponent implements OnInit, AfterContentChecked {
-    displayedColumns: string[] = ['select', 'siteId', 'location', 'contractorId', 'submittedOn', 'image'];
+export class DashboardComponent implements OnInit, AfterContentChecked, OnDestroy {
+    displayedColumns: string[] = ['select', 'siteId', 'location', 'map', 'contractorId', 'submittedOn', 'image', 'edit'];
     dataSource: MatTableDataSource<ISiteData>;
     showInput: Boolean = false;
     newSite: ISiteData;
@@ -37,6 +38,8 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild('archiveBtn') archiveBtn: HTMLButtonElement;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    private unsubscribe: Subject<void> = new Subject();
 
     constructor(private dashboardService: DashboardService,
         private archiveDataService: ArchiveDataService,
@@ -50,32 +53,44 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
             contractorId: null,
             image: '',
             submittedOn: null,
-            status: 'Submitted'
+            status: 'Submitted',
+            lat_Long_True: ''
         };
         this.archiveData = new Array;
     }
 
     ngOnInit() {
         this.ngxService.startLoader('loader-01');
-        this.archiveDataService.currentSiteData.subscribe(message => {
+        this.archiveDataService.currentSiteData.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(message => {
             if (this.dataSource) {
                 const data: ISiteData[] = this.dataSource.data;
                 message.forEach(element => {
                     data.push(element);
                 });
+                data.sort(function (a, b) {
+                    return b.siteId - a.siteId;
+                });
                 this.dataSource.data = data;
             }
         });
-        this.archiveDataService.currentArchivedSiteData.subscribe(message => {
+        this.archiveDataService.currentArchivedSiteData.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(message => {
             if (this.dataSource) {
                 const data = [];
                 message.forEach(element => {
                     data.push(element);
                 });
+                data.sort(function (a, b) {
+                    return b.siteId - a.siteId;
+                });
                 this.archiveData = data;
             }
         });
         this.dashboardService.getActiveSites().pipe(
+            takeUntil(this.unsubscribe),
             map(data => {
                 data.map((item, index) => {
                     // item.position = index + 1;
@@ -83,6 +98,11 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
                         item.imageURL = item.imageURL.split(',');
                     }
                 });
+
+                data.sort(function (a, b) {
+                    return b.siteId - a.siteId;
+                });
+
                 console.log('active data', data);
                 // this.tmpdata = data;
                 this.dataSource = new MatTableDataSource(data);
@@ -103,8 +123,8 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
             })
         ).subscribe();
 
-
         this.dashboardService.getArchivedSites().pipe(
+            takeUntil(this.unsubscribe),
             map(data => {
                 data.map((item, index) => {
                     if (item.imageURL && item.imageURL !== '') {
@@ -112,6 +132,9 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
                     }
                 });
                 console.log('archive data...', data);
+                data.sort(function (a, b) {
+                    return b.siteId - a.siteId;
+                });
                 this.archiveData = data;
             })
         ).subscribe();
@@ -143,11 +166,11 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
         }
     }
 
-    openDialog(elem): void {
+    openDialog(elem, i): void {
         const dialogRef = this.dialog.open(DialogComponent, {
             width: '600px',
-            height: '650px',
-            data: { name: elem.imageURL, siteId: elem.siteId, location: elem.location, contractorId: elem.contractorId }
+            height: '670px',
+            data: { name: elem.imageURL, siteId: elem.siteId, location: elem.location, contractorId: elem.contractorId, index: i }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -157,9 +180,31 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
     }
 
     addNewEntry() {
+        // if (this.contractors[0].length === 0) {
+        //     this.newContr.contractorId = 1;
+        // } else {
+        // }
+        const maxId = this.dataSource.data
+            .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
+        this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
+
+
         if (this.newSite.siteId !== null && this.newSite.contractorId !== null && this.newSite.location !== '') {
-            let newSite: ISiteData = { siteId: this.newSite.siteId, contractorId: this.newSite.contractorId, location: this.newSite.location, image: null, status: 'Open', submittedOn: null }
-            this.dashboardService.createNewSite(newSite).subscribe();
+            const newSite: ISiteData = {
+                siteId: this.newSite.siteId,
+                contractorId: this.newSite.contractorId,
+                location: this.newSite.location.trim(),
+                image: null, status: 'Open',
+                submittedOn: null,
+                lat_Long_True: this.newSite.lat_Long_True.trim()
+            };
+            this.dashboardService.createNewSite(newSite).pipe(
+                map(data => {
+                    this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
+                        duration: 4000,
+                    });
+                })
+            ).subscribe();
             const tmpdata = this.dataSource.data;
             tmpdata.unshift(newSite);
             this.dataSource.data = tmpdata;
@@ -169,12 +214,10 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
                 siteId: null,
                 contractorId: null,
                 image: '',
-                submittedOn: null
+                submittedOn: null,
+                lat_Long_True: ''
             };
             this.showInput = false;
-            this.snackBar.open('New site is added', 'Ok', {
-                duration: 4000,
-            });
         }
     }
     removeDuplicates(arr) {
@@ -187,7 +230,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
         return unique_array;
     }
 
-    getContractors() {
+    showContractors() {
         const activeContractors = this.removeDuplicates(this.dataSource.data.map(item => {
             return item.contractorId;
         }));
@@ -214,7 +257,6 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
     }
 
     masterToggle() {
-        // this.selection.selected.length > 0 ? this.archiveBtn.disabled = false : this.archiveBtn.disabled = true;
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));
@@ -230,14 +272,22 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
     archive() {
 
         const arrId = [];
+        const arrSiteId = [];
         this.dataSource.data = this.dataSource.data.filter(row => {
             if (this.selection.isSelected(row)) {
                 arrId.push(row._id);
+                arrSiteId.push(` ${row.siteId}`);
                 this.archiveData.push(row);
             }
             return !this.selection.isSelected(row);
         });
-        this.dashboardService.updateArchive(arrId, 'true').subscribe();
+        this.dashboardService.updateArchive(arrId, 'true').pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(result => {
+            this.snackBar.open(`Site Id${arrSiteId} added to archive`, 'Ok', {
+                duration: 4000,
+            });
+        });
         this.selection.clear();
     }
 
@@ -252,5 +302,42 @@ export class DashboardComponent implements OnInit, AfterContentChecked {
             // this.archiveData.length = 0;
             console.log('The dialog was closed');
         });
+    }
+
+    openMap(data: ISiteData) {
+        if (data.lat_Long_True !== '') {
+            const dialogRef = this.dialog.open(LocateComponent, {
+                width: '80%',
+                height: '510px',
+                data: data
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                // this.archiveData.length = 0;
+                console.log('The dialog was closed');
+            });
+        } else {
+            this.snackBar.open('Please enter the latitude and longitude separated by ",".', 'Ok', {
+                duration: 4000,
+            });
+        }
+    }
+
+    openSiteEdit(data: ISiteData) {
+        const dialogRef = this.dialog.open(EditSiteComponent, {
+            width: '300px',
+            height: '330px',
+            data: [data, this.contractorsList]
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            // this.archiveData.length = 0;
+            console.log('The dialog was closed');
+        });
+
+    }
+
+    ngOnDestroy() {
+        console.log('ngOnDestory');
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

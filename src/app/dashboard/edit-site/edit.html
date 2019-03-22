@@ -1,0 +1,20 @@
+<div class="container">
+    <h3 mat-header>Edit data for site Id: {{data[0].siteId}}</h3>
+    <mat-form-field class="input-change">
+        <input matInput [(ngModel)]="data[0].location" placeholder="Site Name" required>
+    </mat-form-field>
+    <mat-form-field class="input-change">
+        <input matInput [(ngModel)]="data[0].lat_Long_True" placeholder="Latitude, Longitude" required>
+    </mat-form-field>
+   
+    <mat-form-field class="input-change">
+        <mat-select placeholder="Contractor Id" [(value)]="data[0].contractorId" required>
+            <mat-option *ngFor="let item of data[1]" [value]="item.contractorId">
+                {{item.contractorId}} : {{item.name}}
+            </mat-option>
+        </mat-select>
+        <!-- <input matInput [(ngModel)]="newSite.contractorId" placeholder="Contractor Id" type="number" required> -->
+    </mat-form-field>
+
+    <button mat-raised-button (click)="onSubmit()" class="save-btn">Save</button>
+</div>

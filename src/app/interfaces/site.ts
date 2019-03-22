@@ -5,8 +5,8 @@ export interface ISiteData {
     contractorId: number;
     image: string;
     submittedOn: Date;
+    lat_Long_True: string;
     status?: string;
-    lat_Long_True?: string;
 }
 
 export interface IDialogData {
@@ -14,4 +14,5 @@ export interface IDialogData {
     siteId: number;
     contractorId: number;
     location: string;
+    index: number;
 }

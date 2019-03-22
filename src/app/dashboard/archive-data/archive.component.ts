@@ -1,9 +1,11 @@
-import { Component, Inject, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, AfterContentChecked, OnDestroy } from '@angular/core';
 import { MatPaginator, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
-import { ISiteData } from '../../interfaces/site';
-
 import { SelectionModel } from '@angular/cdk/collections';
 
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { ISiteData } from '../../interfaces/site';
 import { ArchiveDataService } from '../../services/archive-data.service';
 import { DashboardService } from '../../services/dashboard.service';
 @Component({
@@ -11,11 +13,12 @@ import { DashboardService } from '../../services/dashboard.service';
     templateUrl: 'archive.html',
     styleUrls: ['./archive.css']
 })
-export class ArchiveDialogComponent implements OnInit, AfterContentChecked {
+export class ArchiveDialogComponent implements OnInit, AfterContentChecked, OnDestroy {
     displayedColumns: string[] = ['select', 'siteId', 'location', 'contractorId', 'submittedOn', 'image'];
     selection = new SelectionModel<ISiteData>(true, []);
     @ViewChild('archiveRemoveBtn') archiveRemoveBtn: HTMLButtonElement;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    private unsubscribe: Subject<void> = new Subject();
 
     constructor(public dialogRef: MatDialogRef<ArchiveDialogComponent>,
         private dataService: ArchiveDataService,
@@ -40,7 +43,9 @@ export class ArchiveDialogComponent implements OnInit, AfterContentChecked {
         this.dataSource.data = this.dataSource.data.filter(row => {
             return !this.selection.isSelected(row);
         });
-        this.dashboardService.updateArchive(arrId, 'false').subscribe();
+        this.dashboardService.updateArchive(arrId, 'false').pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe();
         this.dataService.changeSiteData(data);
         this.dataService.changeArchivedSiteData(this.dataSource.data);
     }
@@ -69,5 +74,11 @@ export class ArchiveDialogComponent implements OnInit, AfterContentChecked {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.siteId + 1}`;
+    }
+
+    ngOnDestroy() {
+        console.log('ngOnDestory');
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

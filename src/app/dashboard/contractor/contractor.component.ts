@@ -1,5 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { IContractor } from '../../interfaces/contractor';
 
@@ -9,9 +12,10 @@ import { DashboardService } from '../../services/dashboard.service';
     templateUrl: 'contractor.html',
     styleUrls: ['./contractor.css']
 })
-export class ContractorDialogComponent implements OnInit {
+export class ContractorDialogComponent implements OnInit, OnDestroy {
     showInput = false;
     newContr: IContractor;
+    private unsubscribe: Subject<void> = new Subject();
 
     constructor(public dialogRef: MatDialogRef<ContractorDialogComponent>,
         private dashboardService: DashboardService,
@@ -40,7 +44,9 @@ export class ContractorDialogComponent implements OnInit {
 
     addContractor() {
         if (this.newContr.name !== '') {
-            this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name).subscribe();
+            this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name).pipe(
+                takeUntil(this.unsubscribe)
+            ).subscribe();
             const data = this.contractors[0];
             data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId });
             this.contractors[0] = data;
@@ -63,12 +69,20 @@ export class ContractorDialogComponent implements OnInit {
                     delInd = index;
                 }
             });
-            this.dashboardService.delContractors(del._id).subscribe();
+            this.dashboardService.delContractors(del._id).pipe(
+                takeUntil(this.unsubscribe)
+            ).subscribe();
             this.contractors[0].splice(delInd, 1);
         } else {
-            this.snackBar.open('This record cannot be deleted asthis contractor has assigned sites to it.', 'Ok', {
+            this.snackBar.open('This record cannot be deleted as this contractor has assigned sites to it.', 'Ok', {
                 duration: 10000,
             });
         }
+    }
+
+    ngOnDestroy() {
+        console.log('ngOnDestory');
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

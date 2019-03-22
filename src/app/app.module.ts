@@ -14,6 +14,9 @@ import { DashboardService } from './services/dashboard.service';
 import { DialogComponent } from './dashboard/dialog/dialog.component';
 import { ArchiveDialogComponent } from './dashboard/archive-data/archive.component';
 import { ContractorDialogComponent } from './dashboard/contractor/contractor.component';
+import { LocateComponent } from './dashboard/locate/locate.component';
+import { SiteDetailsComponent } from './comman/site-details/site-details.component';
+import { EditSiteComponent } from './dashboard/edit-site/edit.component';
 
 import { SlickModule } from 'ngx-slick';
 import { NgxUiLoaderModule, NgxUiLoaderConfig } from 'ngx-ui-loader';
@@ -29,7 +32,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     DashboardComponent,
     DialogComponent,
     ArchiveDialogComponent,
-    ContractorDialogComponent
+    ContractorDialogComponent,
+    LocateComponent,
+    SiteDetailsComponent,
+    EditSiteComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +52,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   entryComponents: [
     DialogComponent,
     ArchiveDialogComponent,
-    ContractorDialogComponent
+    ContractorDialogComponent,
+    LocateComponent,
+    EditSiteComponent
   ]
 })
 

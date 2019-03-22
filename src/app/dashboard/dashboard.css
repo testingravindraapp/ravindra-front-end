@@ -36,6 +36,10 @@ table {
   flex: 0 0 150px;
 }
 
+.mat-column-map {
+  flex: 0 0 150px;
+}
+
 .input-new {
   margin-right: 10px;
 }
@@ -47,6 +51,7 @@ table {
 .add-sites {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .btn-contractor {
@@ -57,4 +62,11 @@ table {
 .archive-btn {
   margin-right: 10px;
   
+}
+
+.location{
+  cursor: pointer;
+}
+.add-btn{
+  cursor: pointer;
 }

@@ -1,19 +1,13 @@
 <div class="container">
-        <!-- <img [src]="data.name" class="image-data"> -->
-        <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig">
-                <div ngxSlickItem *ngFor="let slide of data.name" class="slide">
-                        <img src="{{ slide }}" alt="" class="image-data">
-                </div>
-        </ngx-slick>
-        <div class="site-details">
-                <mat-card class="card">
-                        Site Id: {{data.siteId}}
-                </mat-card>
-                <mat-card class="card">
-                        Site Name: {{data.location}}
-                </mat-card>
-                <mat-card class="card">
-                        Contractor Id: {{data.contractorId}}
-                </mat-card>
+        <div class="image-container">
+                <mat-icon mat-list-icon (click)="goLeft()" class="arrow-left">keyboard_arrow_left</mat-icon>
+                <mat-icon mat-list-icon (click)="goRight()" class="arrow-right">keyboard_arrow_right</mat-icon>
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" (afterChange)="afterChange($event)">
+                        <div ngxSlickItem *ngFor="let slide of data.name; let ind = index;" class="slide">
+                                <img src="{{ slide }}" alt="" class="image-data">
+                        </div>
+                </ngx-slick>
         </div>
+
+        <app-site-details [siteData]="data"></app-site-details>
 </div>

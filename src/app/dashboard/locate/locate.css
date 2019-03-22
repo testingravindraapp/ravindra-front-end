@@ -1,0 +1,11 @@
+.site-details {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+.card {
+    margin-top: 10px;
+    border-left: 1px solid grey;
+    margin-right: 15px;
+    color: rgb(87, 87, 87);
+}

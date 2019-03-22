@@ -92,6 +92,21 @@ export class DashboardService {
         );
     }
 
+    public updateSiteData(Id, siteName, latLong, cId): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('id', Id);
+        body.set('siteName', siteName);
+        body.set('latLong', latLong);
+        body.set('cId', cId);
+        console.log('updateSiteData............................');
+        return this.http.put(`${AppSettings.SERVICE_BASE_URL}/updateSiteData`, body.toString(), this.options).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
 
     public getContractors(): Observable<any> {
         console.log('getContractors............................');
