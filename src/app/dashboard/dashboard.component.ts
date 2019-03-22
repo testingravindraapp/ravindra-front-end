@@ -180,14 +180,9 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
     }
 
     addNewEntry() {
-        // if (this.contractors[0].length === 0) {
-        //     this.newContr.contractorId = 1;
-        // } else {
-        // }
         const maxId = this.dataSource.data
             .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
         this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
-
 
         if (this.newSite.siteId !== null && this.newSite.contractorId !== null && this.newSite.location !== '') {
             const newSite: ISiteData = {
@@ -200,24 +195,25 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
             };
             this.dashboardService.createNewSite(newSite).pipe(
                 map(data => {
+                    newSite._id = data._id;
+                    const tmpdata = this.dataSource.data;
+                    tmpdata.unshift(newSite);
+                    this.dataSource.data = tmpdata;
+                    // this.dataSource = new MatTableDataSource(this.tmpdata);
+                    this.newSite = {
+                        location: '',
+                        siteId: null,
+                        contractorId: null,
+                        image: '',
+                        submittedOn: null,
+                        lat_Long_True: ''
+                    };
+                    this.showInput = false;
                     this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
                         duration: 4000,
                     });
                 })
             ).subscribe();
-            const tmpdata = this.dataSource.data;
-            tmpdata.unshift(newSite);
-            this.dataSource.data = tmpdata;
-            // this.dataSource = new MatTableDataSource(this.tmpdata);
-            this.newSite = {
-                location: '',
-                siteId: null,
-                contractorId: null,
-                image: '',
-                submittedOn: null,
-                lat_Long_True: ''
-            };
-            this.showInput = false;
         }
     }
     removeDuplicates(arr) {
