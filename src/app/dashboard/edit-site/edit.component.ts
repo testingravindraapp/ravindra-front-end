@@ -14,9 +14,7 @@ import { DashboardService } from '../../services/dashboard.service';
   styleUrls: ['./edit.css']
 })
 export class EditSiteComponent implements OnDestroy {
-  slideConfig = { 'slidesToShow': 1, 'slidesToScroll': 1 };
-  @ViewChild('slickModal') slickModal: any;
-  active: number;
+
   private unsubscribe: Subject<void> = new Subject();
 
   constructor( private dashboardService: DashboardService,
