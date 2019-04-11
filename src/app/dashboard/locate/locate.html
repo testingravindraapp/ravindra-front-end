@@ -1,3 +1,11 @@
+<div *ngIf="data[1] === 'confirm'">
+    Please confirm your location on map
+</div>
 <div #gmap style="width:100%;height:400px"></div>
 
-<app-site-details [siteData] ="data"></app-site-details>
+<app-site-details [siteData]="data[0]"></app-site-details>
+
+<div *ngIf="data[1] === 'confirm'" mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button [mat-dialog-close]="'true'" cdkFocusInitial>Confirm</button>
+</div>

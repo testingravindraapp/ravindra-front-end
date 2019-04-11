@@ -26,7 +26,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
     styleUrls: ['./dashboard.css'],
 })
 export class DashboardComponent implements OnInit, AfterContentChecked, OnDestroy {
-    displayedColumns: string[] = ['select', 'siteId', 'location', 'map', 'contractorId', 'submittedOn', 'image', 'edit'];
+    displayedColumns: string[] = ['select', 'siteId', 'address', 'contractorId', 'submittedOn', 'image', 'edit'];
     dataSource: MatTableDataSource<ISiteData>;
     showInput: Boolean = false;
     newSite: ISiteData;
@@ -48,13 +48,17 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
         private ngxService: NgxUiLoaderService) {
         this.contractorsList = [];
         this.newSite = {
-            location: '',
+            // location: '',
             siteId: null,
             contractorId: null,
             image: '',
             submittedOn: null,
             status: 'Submitted',
-            lat_Long_True: ''
+            lat_Long_True: '',
+            address: '',
+            locality: '',
+            city: '',
+            state: '',
         };
         this.archiveData = new Array;
     }
@@ -90,7 +94,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
             }
         });
         this.dashboardService.getActiveSites().pipe(
-            
+
             map(data => {
                 data.map((item, index) => {
                     // item.position = index + 1;
@@ -181,42 +185,23 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
     }
 
     addNewEntry() {
-        const maxId = this.dataSource.data
-            .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
-        this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
+        var geocoder = new google.maps.Geocoder();
+        var address = `${this.newSite.address},${this.newSite.locality},${this.newSite.city},${this.newSite.state}`;
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                console.log("location", results[0].geometry.location);
+                console.log(results[0].geometry);
+                // uncomment this after getting google maps key
+                //   this.newSite.lat_Long_True = `${results[0].geometry.location.latitude}, ${results[0].geometry.location.longitude}`
+                this.openMap(this.newSite, "confirm");
 
-        if (this.newSite.siteId !== null && this.newSite.contractorId !== null && this.newSite.location !== '') {
-            const newSite: ISiteData = {
-                siteId: this.newSite.siteId,
-                contractorId: this.newSite.contractorId,
-                location: this.newSite.location.trim(),
-                image: null, status: 'Open',
-                submittedOn: null,
-                lat_Long_True: this.newSite.lat_Long_True.trim()
-            };
-            this.dashboardService.createNewSite(newSite).pipe(
-                map(data => {
-                    newSite._id = data._id;
-                    const tmpdata = this.dataSource.data;
-                    tmpdata.unshift(newSite);
-                    this.dataSource.data = tmpdata;
-                    // this.dataSource = new MatTableDataSource(this.tmpdata);
-                    this.newSite = {
-                        location: '',
-                        siteId: null,
-                        contractorId: null,
-                        image: '',
-                        submittedOn: null,
-                        lat_Long_True: ''
-                    };
-                    this.showInput = false;
-                    this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
-                        duration: 4000,
-                    });
-                })
-            ).subscribe();
-        }
+                
+            } else {
+                alert("We are unable to get your location. Please enter correct location.");
+            }
+        });
     }
+
     removeDuplicates(arr) {
         const unique_array = [];
         for (let i = 0; i < arr.length; i++) {
@@ -241,6 +226,50 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            if (result === 'true') {
+                const maxId = this.dataSource.data
+                    .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
+                this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
+                if (this.newSite.siteId !== null && this.newSite.lat_Long_True !== '' && this.newSite.address !== ''
+                    && this.newSite.locality !== '' && this.newSite.city !== '' && this.newSite.state !== '') {
+                    const newSite: ISiteData = {
+                        siteId: this.newSite.siteId,
+                        contractorId: this.newSite.contractorId,
+                        // location: this.newSite.location.trim(),
+                        image: null, status: 'Open',
+                        submittedOn: null,
+                        lat_Long_True: this.newSite.lat_Long_True.trim(),
+                        address: this.newSite.address,
+                        locality: this.newSite.locality,
+                        city: this.newSite.city,
+                        state: this.newSite.state,
+                    };
+                    this.dashboardService.createNewSite(newSite).pipe(
+                        map((data: ISiteData) => {
+                            newSite._id = data._id;
+                            const tmpdata = this.dataSource.data;
+                            tmpdata.unshift(newSite);
+                            this.dataSource.data = tmpdata;
+                            this.newSite = {
+                                // location: '',
+                                siteId: null,
+                                contractorId: null,
+                                image: '',
+                                submittedOn: null,
+                                lat_Long_True: '',
+                                address: '',
+                                locality: '',
+                                city: '',
+                                state: '',
+                            };
+                            this.showInput = false;
+                            this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
+                                duration: 4000,
+                            });
+                        })
+                    ).subscribe();
+                }
+            }
             console.log('The dialog was closed');
         });
     }
@@ -267,7 +296,6 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
     }
 
     archive() {
-
         const arrId = [];
         const arrSiteId = [];
         this.dataSource.data = this.dataSource.data.filter(row => {
@@ -301,12 +329,12 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
         });
     }
 
-    openMap(data: ISiteData) {
+    openMap(data: ISiteData, type: string) {
         if (data.lat_Long_True !== '') {
             const dialogRef = this.dialog.open(LocateComponent, {
                 width: '80%',
                 height: '510px',
-                data: data
+                data: [data, type]
             });
             dialogRef.afterClosed().subscribe(result => {
                 // this.archiveData.length = 0;

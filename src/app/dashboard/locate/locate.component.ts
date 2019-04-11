@@ -15,10 +15,10 @@ export class LocateComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<LocateComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: ISiteData) { }
+        @Inject(MAT_DIALOG_DATA) public data: [ISiteData, String]) { }
 
     ngOnInit() {
-        const c = this.data.lat_Long_True.replace(/ /g, '').split(',');
+        const c = this.data[0].lat_Long_True.replace(/ /g, '').split(',');
         const mapProp = {
             center: new google.maps.LatLng(Number(c[0]), Number(c[1])),
             zoom: 15,

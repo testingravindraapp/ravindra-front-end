@@ -1,12 +1,23 @@
 <div class="container">
     <h3 mat-header>Edit data for site Id: {{data[0].siteId}}</h3>
+
     <mat-form-field class="input-change">
-        <input matInput [(ngModel)]="data[0].location" placeholder="Site Name" required>
+        <input matInput [(ngModel)]="data[0].address" placeholder="Address" required>
     </mat-form-field>
+    <mat-form-field class="input-change">
+        <input matInput [(ngModel)]="data[0].locality" placeholder="Locality" required>
+    </mat-form-field>
+    <mat-form-field class="input-change">
+        <input matInput [(ngModel)]="data[0].city" placeholder="City" required>
+    </mat-form-field>
+    <mat-form-field class="input-change">
+        <input matInput [(ngModel)]="data[0].state" placeholder="State" required>
+    </mat-form-field>
+
     <mat-form-field class="input-change">
         <input matInput [(ngModel)]="data[0].lat_Long_True" placeholder="Latitude, Longitude" required>
     </mat-form-field>
-   
+
     <mat-form-field class="input-change">
         <mat-select placeholder="Contractor Id" [(value)]="data[0].contractorId" required>
             <mat-option *ngFor="let item of data[1]" [value]="item.contractorId">

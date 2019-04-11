@@ -5,7 +5,7 @@ import { Router, Event, NavigationStart } from '@angular/router';
 import { Observable, BehaviorSubject, pipe } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
 
-import { AppSettings } from './util/constants';
+import { AppSettings } from './util/config';
 
 import { ISiteData } from '../interfaces/site';
 @Injectable()
@@ -83,7 +83,7 @@ export class DashboardService {
         body.set('archived', archived);
 
         console.log('updateArchive............................');
-        return this.http.put(`${AppSettings.SERVICE_BASE_URL}/updateArchive`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/updateArchive`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -92,14 +92,17 @@ export class DashboardService {
         );
     }
 
-    public updateSiteData(Id, siteName, latLong, cId): Observable<any> {
+    public updateSiteData(data: ISiteData): Observable<any> {
         const body = new URLSearchParams();
-        body.set('id', Id);
-        body.set('siteName', siteName);
-        body.set('latLong', latLong);
-        body.set('cId', cId);
+        body.set('id', data._id);
+        body.set('address', data.address);
+        body.set('locality', data.locality);
+        body.set('city', data.city);
+        body.set('state', data.state);
+        body.set('latLong', data.lat_Long_True);
+        body.set('cId', data.contractorId.toString());
         console.log('updateSiteData............................', body.toString());
-        return this.http.put(`${AppSettings.SERVICE_BASE_URL}/updateSiteData`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/updateSiteData`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -125,7 +128,7 @@ export class DashboardService {
         body.set('name', name);
 
         console.log('addContractors............................');
-        return this.http.put(`${AppSettings.SERVICE_BASE_URL}/addContractors`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/addContractors`, body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -150,10 +153,15 @@ export class DashboardService {
 
     public createNewSite(newSite: ISiteData): Observable<any> {
         const body = new URLSearchParams();
-        body.set('location', newSite.location);
+        // body.set('location', newSite.location);
         body.set('siteId', newSite.siteId.toString());
         body.set('contractorId', newSite.contractorId.toString());
-        body.set('lat_Long_True', newSite.lat_Long_True);
+        body.set('lat_Long_True', newSite.lat_Long_True); 
+        body.set('address', newSite.address);
+        body.set('locality', newSite.locality);
+        body.set('city', newSite.city);
+        body.set('state', newSite.state);
+
 
         console.log('createNewSite............................');
         return this.http.post(`${AppSettings.SERVICE_BASE_URL}/createNewSite`, body.toString(), this.options).pipe(

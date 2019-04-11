@@ -43,6 +43,7 @@ table {
 
 .input-new {
   margin-right: 10px;
+  display: inline-block;
 }
 
 .filter-select {
