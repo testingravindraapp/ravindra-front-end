@@ -46,7 +46,7 @@ export class DashboardService {
 
     public getAllSites(): Observable<any> {
         console.log('getAllSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/sites?secret_token=${this.localStr}`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/sites?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -57,7 +57,7 @@ export class DashboardService {
 
     public getActiveSites(): Observable<any> {
         console.log('getActiveSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/activeSites?secret_token=${this.localStr}`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/activeSites?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -68,7 +68,7 @@ export class DashboardService {
 
     public getArchivedSites(): Observable<any> {
         console.log('getArchivedSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/archivedSites?secret_token=${this.localStr}`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/archivedSites?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -112,7 +112,7 @@ export class DashboardService {
 
     public getContractors(): Observable<any> {
         console.log('getContractors............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/contractors?secret_token=${this.localStr}`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/contractors?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
