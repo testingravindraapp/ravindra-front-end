@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
     private unsubscribe: Subject<void> = new Subject();
 
     constructor(private dashboardService: DashboardService,
-        private loginService: LoginService,
+        public loginService: LoginService,
         private archiveDataService: ArchiveDataService,
         public dialog: MatDialog,
         private snackBar: MatSnackBar,
