@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Enter Site Details</h2>
+
+<mat-dialog-content>
+
+  <mat-label><strong>Address: </strong></mat-label>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data[0].address" placeholder="Enter Address (eg. Survey no, building Name)">
+  </mat-form-field><br>
+
+  <mat-label><strong>Latitude: </strong></mat-label>
+  <mat-form-field>
+    <input matInput [(ngModel)]="latitude" placeholder="Enter Latitide" (change)="setLatLong()">
+  </mat-form-field><br>
+
+  <mat-label><strong>Longitude: </strong></mat-label>
+  <mat-form-field>
+    <input matInput [(ngModel)]="longitude" placeholder="Enter Longitude" (change)="setLatLong()">
+  </mat-form-field><br>
+
+  <mat-label><strong>ContractorId: </strong></mat-label>
+  <mat-form-field>
+    <mat-select placeholder="Select Contractor Id" [(value)]="data[0].contractorId">
+      <mat-option *ngFor="let contractor of data[1]" [value]="contractor.contractorId">{{contractor.contractorId}}: {{contractor.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="data[0]">Ok</button>
+</mat-dialog-actions>

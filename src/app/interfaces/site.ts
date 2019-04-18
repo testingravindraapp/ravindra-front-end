@@ -7,9 +7,6 @@ export interface ISiteData {
     submittedOn: Date;
     lat_Long_True: string;
     address: string;
-    locality: string;
-    city: string;
-    state: string;
     status?: string;
 }
 
@@ -20,3 +17,4 @@ export interface IDialogData {
     location: string;
     index: number;
 }
+

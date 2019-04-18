@@ -14,3 +14,38 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 * {
     font-family: 'Montserrat', sans-serif;
 }
+
+.mat-dialog-container{
+    padding: 0!important;
+    overflow: visible;
+}
+.cdk-overlay-pane{
+    width: 650px;
+}
+.cdk-overlay-pane .mat-dialog-content{
+    overflow: visible;
+    margin: 0!important;
+    padding: 30px!important;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.cdk-overlay-pane .mat-dialog-content strong{
+    display: inline-block;
+    width: 200px;
+    padding: 5px 0;
+}
+.mat-dialog-container .mat-dialog-title{
+    background: #2f3a4c;
+    color: #fff;
+    padding: 20px;
+    margin-bottom: 0;
+}
+.mat-dialog-actions{
+    background: #eff4f7;
+    margin: 0!important;
+    padding: 8px 15px!important;
+}
+.mat-dialog-actions button{
+    background: #ab6600;
+    color: #fff;
+    font-size: 16px;
+}

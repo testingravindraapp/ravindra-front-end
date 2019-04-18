@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppMaterialModule } from './app-material/app-material.module';
@@ -20,6 +20,9 @@ import { EditSiteComponent } from './dashboard/edit-site/edit.component';
 
 import { SlickModule } from 'ngx-slick';
 import { NgxUiLoaderModule, NgxUiLoaderConfig } from 'ngx-ui-loader';
+import { SiteDetailDialogComponent } from './dashboard/site-detail-dialog/site-detail-dialog.component';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { TokenInterceptorService } from './services/token-interceptor.service';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   fgsColor: '#ffd740',
@@ -35,7 +38,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ContractorDialogComponent,
     LocateComponent,
     SiteDetailsComponent,
-    EditSiteComponent
+    EditSiteComponent,
+    SiteDetailDialogComponent,
+    LoginPageComponent
   ],
   imports: [
     BrowserModule,
@@ -43,18 +48,24 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     AppMaterialModule,
     SlickModule.forRoot(),
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [DashboardService],
+  providers: [DashboardService,  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent],
   entryComponents: [
     DialogComponent,
     ArchiveDialogComponent,
     ContractorDialogComponent,
     LocateComponent,
-    EditSiteComponent
+    EditSiteComponent,
+    SiteDetailDialogComponent
   ]
 })
 

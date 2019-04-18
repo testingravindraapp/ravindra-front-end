@@ -19,6 +19,8 @@ import { ISiteData } from '../interfaces/site';
 import { IContractor } from '../interfaces/contractor';
 
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { SiteDetailDialogComponent } from './site-detail-dialog/site-detail-dialog.component';
+import { LoginService } from '../services/login.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -26,7 +28,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
     styleUrls: ['./dashboard.css'],
 })
 export class DashboardComponent implements OnInit, AfterContentChecked, OnDestroy {
-    displayedColumns: string[] = ['select', 'siteId', 'address', 'contractorId', 'submittedOn', 'image', 'edit'];
+    displayedColumns: string[] = ['select', 'siteId', 'address', 'map', 'contractorId', 'submittedOn', 'image', 'edit'];
     dataSource: MatTableDataSource<ISiteData>;
     showInput: Boolean = false;
     newSite: ISiteData;
@@ -42,6 +44,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
     private unsubscribe: Subject<void> = new Subject();
 
     constructor(private dashboardService: DashboardService,
+        private loginService: LoginService,
         private archiveDataService: ArchiveDataService,
         public dialog: MatDialog,
         private snackBar: MatSnackBar,
@@ -56,9 +59,6 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
             status: 'Submitted',
             lat_Long_True: '',
             address: '',
-            locality: '',
-            city: '',
-            state: '',
         };
         this.archiveData = new Array;
     }
@@ -185,21 +185,56 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
     }
 
     addNewEntry() {
-        var geocoder = new google.maps.Geocoder();
-        var address = `${this.newSite.address},${this.newSite.locality},${this.newSite.city},${this.newSite.state}`;
-        geocoder.geocode({ 'address': address }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                console.log("location", results[0].geometry.location);
-                console.log(results[0].geometry);
-                // uncomment this after getting google maps key
-                //   this.newSite.lat_Long_True = `${results[0].geometry.location.latitude}, ${results[0].geometry.location.longitude}`
-                this.openMap(this.newSite, "confirm");
+        // var geocoder = new google.maps.Geocoder();
+        // var address = `${this.newSite.address},${this.newSite.locality},${this.newSite.city},${this.newSite.state}`;
+        // geocoder.geocode({ 'address': address }, function (results, status) {
+        //     if (status == google.maps.GeocoderStatus.OK) {
+        //         console.log("location", results[0].geometry.location);
+        //         console.log(results[0].geometry);
+        //         // uncomment this after getting google maps key
+        //         //   this.newSite.lat_Long_True = `${results[0].geometry.location.latitude}, ${results[0].geometry.location.longitude}`
+        //         this.openMap(this.newSite, "confirm");
 
-                
-            } else {
-                alert("We are unable to get your location. Please enter correct location.");
-            }
-        });
+
+        //     } else {
+        //         alert("We are unable to get your location. Please enter correct location.");
+        //     }
+        // });
+        const maxId = this.dataSource.data
+            .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
+        this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
+        if (this.newSite.siteId !== null && (this.newSite.lat_Long_True !== '' || this.newSite.address !== '')) {
+            const newSite: ISiteData = {
+                siteId: this.newSite.siteId,
+                contractorId: this.newSite.contractorId,
+                // location: this.newSite.location.trim(),
+                image: null, status: 'Open',
+                submittedOn: null,
+                lat_Long_True: this.newSite.lat_Long_True.trim(),
+                address: this.newSite.address,
+            };
+            this.dashboardService.createNewSite(newSite).pipe(
+                map((data: ISiteData) => {
+                    newSite._id = data._id;
+                    const tmpdata = this.dataSource.data;
+                    tmpdata.unshift(newSite);
+                    this.dataSource.data = tmpdata;
+                    this.newSite = {
+                        // location: '',
+                        siteId: null,
+                        contractorId: null,
+                        image: '',
+                        submittedOn: null,
+                        lat_Long_True: '',
+                        address: '',
+                    };
+                    this.showInput = false;
+                    this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
+                        duration: 4000,
+                    });
+                })
+            ).subscribe();
+        }
     }
 
     removeDuplicates(arr) {
@@ -226,50 +261,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result === 'true') {
-                const maxId = this.dataSource.data
-                    .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
-                this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
-                if (this.newSite.siteId !== null && this.newSite.lat_Long_True !== '' && this.newSite.address !== ''
-                    && this.newSite.locality !== '' && this.newSite.city !== '' && this.newSite.state !== '') {
-                    const newSite: ISiteData = {
-                        siteId: this.newSite.siteId,
-                        contractorId: this.newSite.contractorId,
-                        // location: this.newSite.location.trim(),
-                        image: null, status: 'Open',
-                        submittedOn: null,
-                        lat_Long_True: this.newSite.lat_Long_True.trim(),
-                        address: this.newSite.address,
-                        locality: this.newSite.locality,
-                        city: this.newSite.city,
-                        state: this.newSite.state,
-                    };
-                    this.dashboardService.createNewSite(newSite).pipe(
-                        map((data: ISiteData) => {
-                            newSite._id = data._id;
-                            const tmpdata = this.dataSource.data;
-                            tmpdata.unshift(newSite);
-                            this.dataSource.data = tmpdata;
-                            this.newSite = {
-                                // location: '',
-                                siteId: null,
-                                contractorId: null,
-                                image: '',
-                                submittedOn: null,
-                                lat_Long_True: '',
-                                address: '',
-                                locality: '',
-                                city: '',
-                                state: '',
-                            };
-                            this.showInput = false;
-                            this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
-                                duration: 4000,
-                            });
-                        })
-                    ).subscribe();
-                }
-            }
+
             console.log('The dialog was closed');
         });
     }
@@ -358,6 +350,16 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
             console.log('The dialog was closed');
         });
 
+    }
+
+    OpenDialogToEnterSite() {
+        const dialogRef = this.dialog.open(SiteDetailDialogComponent, { panelClass: 'my-panel' });
+        dialogRef.componentInstance['data'] = [this.newSite, this.contractorsList];
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.addNewEntry();
+            }
+        });
     }
 
     ngOnDestroy() {

@@ -22,3 +22,7 @@ h3 {
 .delete-btn {
     cursor: pointer;
 }
+
+.container {
+    padding: 50px;
+}

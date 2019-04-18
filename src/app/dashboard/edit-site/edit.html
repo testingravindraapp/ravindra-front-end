@@ -1,17 +1,8 @@
-<div class="container">
-    <h3 mat-header>Edit data for site Id: {{data[0].siteId}}</h3>
+<h2 mat-dialog-title>Edit data for site Id: {{data[0].siteId}}</h2>
 
+<mat-dialog-content>
     <mat-form-field class="input-change">
         <input matInput [(ngModel)]="data[0].address" placeholder="Address" required>
-    </mat-form-field>
-    <mat-form-field class="input-change">
-        <input matInput [(ngModel)]="data[0].locality" placeholder="Locality" required>
-    </mat-form-field>
-    <mat-form-field class="input-change">
-        <input matInput [(ngModel)]="data[0].city" placeholder="City" required>
-    </mat-form-field>
-    <mat-form-field class="input-change">
-        <input matInput [(ngModel)]="data[0].state" placeholder="State" required>
     </mat-form-field>
 
     <mat-form-field class="input-change">
@@ -27,5 +18,8 @@
         <!-- <input matInput [(ngModel)]="newSite.contractorId" placeholder="Contractor Id" type="number" required> -->
     </mat-form-field>
 
+</mat-dialog-content>
+
+<mat-dialog-actions>
     <button mat-raised-button (click)="onSubmit()" class="save-btn">Save</button>
-</div>
+</mat-dialog-actions>

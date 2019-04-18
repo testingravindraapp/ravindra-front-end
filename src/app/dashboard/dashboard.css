@@ -11,8 +11,9 @@ table {
   width: 100%;
 }
 .add-new-site {
-  margin-bottom: 20px;
-  margin-top: 13px;
+  /* margin-bottom: 20px;
+  margin-top: 13px; */
+  margin: 13px 20px 20px 0;
 }
 
 .images {
@@ -51,9 +52,9 @@ table {
 }
 
 .add-sites {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: wrap; */
 }
 
 .btn-contractor {

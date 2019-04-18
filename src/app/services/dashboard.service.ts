@@ -13,7 +13,7 @@ export class DashboardService {
     options = {
         headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     };
-
+    localStr = localStorage.getItem('token');
     constructor(protected http: HttpClient,
         private router: Router
     ) { }
@@ -46,7 +46,7 @@ export class DashboardService {
 
     public getAllSites(): Observable<any> {
         console.log('getAllSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/sites`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/sites?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -57,7 +57,7 @@ export class DashboardService {
 
     public getActiveSites(): Observable<any> {
         console.log('getActiveSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/activeSites`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/activeSites?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -68,7 +68,7 @@ export class DashboardService {
 
     public getArchivedSites(): Observable<any> {
         console.log('getArchivedSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/archivedSites`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/archivedSites?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -83,7 +83,8 @@ export class DashboardService {
         body.set('archived', archived);
 
         console.log('updateArchive............................');
-        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/updateArchive`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/updateArchive?secret_token=${this.localStr}`,
+        body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -96,13 +97,11 @@ export class DashboardService {
         const body = new URLSearchParams();
         body.set('id', data._id);
         body.set('address', data.address);
-        body.set('locality', data.locality);
-        body.set('city', data.city);
-        body.set('state', data.state);
         body.set('latLong', data.lat_Long_True);
         body.set('cId', data.contractorId.toString());
         console.log('updateSiteData............................', body.toString());
-        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/updateSiteData`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/updateSiteData?secret_token=${this.localStr}`,
+        body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -113,7 +112,7 @@ export class DashboardService {
 
     public getContractors(): Observable<any> {
         console.log('getContractors............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/contractors`, {}).pipe(
+        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/api/contractors?secret_token=${this.localStr}`, {}).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -128,7 +127,8 @@ export class DashboardService {
         body.set('name', name);
 
         console.log('addContractors............................');
-        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/addContractors`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/addContractors?secret_token=${this.localStr}`,
+        body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -142,7 +142,8 @@ export class DashboardService {
         body.set('id', id);
 
         console.log('deleteContractors............................');
-        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/deleteContractors`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/deleteContractors?secret_token=${this.localStr}`,
+        body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');
@@ -156,15 +157,13 @@ export class DashboardService {
         // body.set('location', newSite.location);
         body.set('siteId', newSite.siteId.toString());
         body.set('contractorId', newSite.contractorId.toString());
-        body.set('lat_Long_True', newSite.lat_Long_True); 
+        body.set('lat_Long_True', newSite.lat_Long_True);
         body.set('address', newSite.address);
-        body.set('locality', newSite.locality);
-        body.set('city', newSite.city);
-        body.set('state', newSite.state);
 
 
         console.log('createNewSite............................');
-        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/createNewSite`, body.toString(), this.options).pipe(
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/createNewSite?secret_token=${this.localStr}`,
+        body.toString(), this.options).pipe(
             map(this.extractDataRes),
             catchError((err: any) => {
                 alert('Something went wrong. Please try again later.');

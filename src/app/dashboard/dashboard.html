@@ -8,7 +8,7 @@
                 <input matInput [(ngModel)]="newSite.location" placeholder="Site Name" required>
             </mat-form-field> -->
             <div *ngIf="showInput">
-                <div class="input-new">
+            <!--    <div class="input-new">
 
                     <mat-form-field>
                         <input matInput [(ngModel)]="newSite.address" placeholder="Address" class="locate-input"
@@ -30,23 +30,25 @@
                     <mat-form-field>
                         <input matInput [(ngModel)]="newSite.state" placeholder="State" class="locate-input" required>
                     </mat-form-field>
-                </div>
+                </div>-->
 
                 <!-- <mat-icon mat-list-icon class="location" (click)="openMap(newSite)" title="View Location">location_on</mat-icon> -->
-                <mat-form-field *ngIf="showInput" class="input-new">
+                <!--<mat-form-field *ngIf="showInput" class="input-new">
                     <mat-select placeholder="Contractor Id" [(value)]="newSite.contractorId">
                         <mat-option *ngFor="let item of contractorsList" [value]="item.contractorId">
                             {{item.contractorId}} : {{item.name}}
                         </mat-option>
                     </mat-select>
-                </mat-form-field>
+                </mat-form-field>-->
 
                 <button *ngIf="showInput" mat-raised-button (click)="addNewEntry()" class="add-new-site">Add</button>
                 <span *ngIf="showInput" style="width:35%;"></span>
             </div>
-            <button *ngIf="!showInput" mat-raised-button (click)="showInput=true;" class="add-new-site">Add new
-                site</button>
-            <button mat-raised-button (click)="showContractors()" class="btn-contractor">Contractors</button>
+            <button *ngIf="!showInput" mat-raised-button (click)="OpenDialogToEnterSite()" class="add-new-site">Add new site</button>
+            <!--<button *ngIf="!showInput" mat-raised-button (click)="showInput=true;" class="add-new-site">Add new
+                site</button>-->
+            <button mat-raised-button (click)="showContractors()" class="btn-contractor add-new-site">Contractors</button>
+            <button mat-raised-button (click)="loginService.Logout()" class="btn-contractor add-new-site">Logout</button>
         </div>
         <hr>
         <button mat-raised-button #archiveBtn (click)="archive()" disabled class="archive-btn">Archive</button>
@@ -93,19 +95,18 @@
 
                 <ng-container matColumnDef="address">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
-                    <td mat-cell *matCellDef="let element"> {{element.address}}, {{element.locality}}, {{element.city}},
-                        {{element.state}}
+                    <td mat-cell *matCellDef="let element"> {{element.address}}
                         <mat-icon mat-list-icon class="location" (click)="openMap(element)" title="View Location">
                             location_on</mat-icon>
                     </td>
                 </ng-container>
 
-                <!-- <ng-container matColumnDef="map">
+                <ng-container matColumnDef="map">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> View Site </th>
                     <td mat-cell *matCellDef="let element">
                         <span *ngIf="element.lat_Long_True !== ''">{{element.lat_Long_True}}</span>
                     </td>
-                </ng-container> -->
+                </ng-container>
 
                 <ng-container matColumnDef="contractorId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Contractor Id </th>
