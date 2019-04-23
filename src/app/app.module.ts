@@ -25,6 +25,7 @@ import { SiteDetailDialogComponent } from './dashboard/site-detail-dialog/site-d
 import { LoginPageComponent } from './login-page/login-page.component';
 import { ContractorService } from './services/contractor.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { HeaderComponent } from './header/header.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   fgsColor: '#ffd740',
@@ -43,7 +44,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     EditSiteComponent,
     SiteDetailDialogComponent,
     LoginPageComponent,
-    ContractorSiteComponent
+    ContractorSiteComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

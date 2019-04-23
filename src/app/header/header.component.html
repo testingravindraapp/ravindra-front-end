@@ -1,0 +1,10 @@
+<div class="container">
+  <h3>
+    RE DASHBOARD
+  </h3>
+  <div class="add-new-site">
+    <button *ngIf="router.url !== '/contractors'" mat-raised-button (click)="showContractors()"
+      class="btn-contractor">Contractors</button>
+    <button mat-raised-button (click)="loginService.Logout()" class="btn-contractor">Logout</button>
+  </div>
+</div>

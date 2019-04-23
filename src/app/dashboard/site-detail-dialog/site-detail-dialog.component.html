@@ -1,31 +1,33 @@
 <h2 mat-dialog-title>Enter Site Details</h2>
+<form  name="form" #f="ngForm">
+  <mat-dialog-content>
 
-<mat-dialog-content>
+    <mat-label><strong>Address: </strong></mat-label>
+    <mat-form-field>
+      <input matInput name="address" [(ngModel)]="data[0].address" placeholder="Enter Address (eg. Survey no, building Name)" type="text=" required>
+    </mat-form-field><br>
 
-  <mat-label><strong>Address: </strong></mat-label>
-  <mat-form-field>
-    <input matInput [(ngModel)]="data[0].address" placeholder="Enter Address (eg. Survey no, building Name)">
-  </mat-form-field><br>
+    <mat-label><strong>Latitude: </strong></mat-label>
+    <mat-form-field>
+      <input matInput [(ngModel)]="latitude" name="latitude" placeholder="Enter Latitide" (change)="setLatLong()" type="number" required>
+    </mat-form-field><br>
 
-  <mat-label><strong>Latitude: </strong></mat-label>
-  <mat-form-field>
-    <input matInput [(ngModel)]="latitude" placeholder="Enter Latitide" (change)="setLatLong()">
-  </mat-form-field><br>
+    <mat-label><strong>Longitude: </strong></mat-label>
+    <mat-form-field>
+      <input matInput [(ngModel)]="longitude" name="longitude" placeholder="Enter Longitude" (change)="setLatLong()" type="number" required>
+    </mat-form-field><br>
 
-  <mat-label><strong>Longitude: </strong></mat-label>
-  <mat-form-field>
-    <input matInput [(ngModel)]="longitude" placeholder="Enter Longitude" (change)="setLatLong()">
-  </mat-form-field><br>
+    <mat-label><strong>ContractorId: </strong></mat-label>
+    <mat-form-field>
+      <mat-select name="contractor" placeholder="Select Contractor Id" [(value)]="data[0].contractorId">
+        <mat-option *ngFor="let contractor of data[1]" [value]="contractor.contractorId">{{contractor.contractorId}}:
+          {{contractor.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
 
-  <mat-label><strong>ContractorId: </strong></mat-label>
-  <mat-form-field>
-    <mat-select placeholder="Select Contractor Id" [(value)]="data[0].contractorId">
-      <mat-option *ngFor="let contractor of data[1]" [value]="contractor.contractorId">{{contractor.contractorId}}: {{contractor.name}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-</mat-dialog-content>
-
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="data[0]">Ok</button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="data[0]" [disabled]="f.form.invalid">Ok</button>
+  </mat-dialog-actions>
+</form>

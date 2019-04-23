@@ -6,6 +6,7 @@
 .arrow-left {
     position: relative;
     top: 280px;
+    left: 10px;
     z-index: 1;
     cursor: pointer;
 }
@@ -21,4 +22,8 @@
 .container {
     overflow-x: hidden;
     padding-bottom: 10px;
+}
+
+.image-container {
+    padding-left: 30px; 
 }

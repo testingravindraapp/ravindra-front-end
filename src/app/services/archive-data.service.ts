@@ -13,6 +13,9 @@ export class ArchiveDataService {
   private archivedSiteDataSource = new BehaviorSubject(null);
   currentArchivedSiteData = this.archivedSiteDataSource.asObservable();
 
+  private contractorDataSource = new BehaviorSubject(null);
+  contractorData = this.contractorDataSource.asObservable();
+
   constructor() { }
 
   changeSiteData(data: any) {
@@ -21,5 +24,9 @@ export class ArchiveDataService {
 
   changeArchivedSiteData(data: any) {
     this.archivedSiteDataSource.next(data);
+  }
+
+  setContractorData(data: any) {
+    this.contractorDataSource.next(data);
   }
 }

@@ -25,35 +25,32 @@ export class DashboardService {
 
     protected handleError(error: Response | any) {
         let errStatus: any;
-
         if (error instanceof Response) {
             errStatus = {
                 statusCode: error.status,
                 statusMessage: (error.status === 0 ? 'Connection Refused' : `${error.statusText || ''}`)
             };
-
         } else {
             errStatus = {
                 statusCode: 500,
                 statusMessage: error.message ? error.message : error.toString()
             };
         }
-
         return Observable.throw(errStatus);
     }
 
 
 
-    public getAllSites(): Observable<any> {
-        console.log('getAllSites............................');
-        return this.http.get(`${AppSettings.SERVICE_BASE_URL}/sites?secret_token=${this.localStr}`, {}).pipe(
-            map(this.extractDataRes),
-            catchError((err: any) => {
-                alert('Something went wrong. Please try again later.');
-                return err;
-            })
-        );
-    }
+    // public getAllSites(): Observable<any> {
+    //     console.log('getAllSites............................');
+    //     return this.http.get(`${AppSettings.SERVICE_BASE_URL}/sites?secret_token=${this.localStr}`, {}).pipe(
+    //         map(this.extractDataRes),
+    //         catchError((err: any) => {
+    //             alert('Something went wrong. Please try again later.');
+    //             return err;
+    //         })
+    //     );
+    // }
 
     public getActiveSites(): Observable<any> {
         console.log('getActiveSites............................');
@@ -156,10 +153,9 @@ export class DashboardService {
         const body = new URLSearchParams();
         // body.set('location', newSite.location);
         body.set('siteId', newSite.siteId.toString());
-        body.set('contractorId', newSite.contractorId.toString());
+        body.set('contractorId', newSite.contractorId ? newSite.contractorId.toString() : null);
         body.set('lat_Long_True', newSite.lat_Long_True);
         body.set('address', newSite.address);
-
 
         console.log('createNewSite............................');
         return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/createNewSite?secret_token=${this.localStr}`,

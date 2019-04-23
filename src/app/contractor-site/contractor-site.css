@@ -1,75 +1,58 @@
 .main {
-    margin: 0 10px 10px 10px;
-  }
-  .container h3 {
-    background-color: #e3eefc;
-    padding: 10px;
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  table {
-    width: 100%;
-  }
-  .add-new-site {
-    /* margin-bottom: 20px;
-    margin-top: 13px; */
-    margin: 13px 20px 20px 0;
-  }
-  
-  .images {
-    margin-right: 10px;
-    height: 80px;
-    cursor: pointer;
-  }
-  
-  .mat-column-siteId {
-    flex: 0 0 100px;
-  }
-  
-  .mat-column-location {
-    flex: 0 0 300px;
-  }
-  
-  .mat-column-contractorId {
-    flex: 0 0 100px;
-  }
-  
-  .mat-column-submittedOn {
-    flex: 0 0 150px;
-  }
-  
-  .mat-column-map {
-    flex: 0 0 150px;
-  }
-  
-  .input-new {
-    margin-right: 10px;
-    display: inline-block;
-  }
-  
-  .filter-select {
-    margin-right: 10px;
-  }
-  
-  .add-sites {
-    /* display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap; */
-  }
-  
-  .btn-contractor {
-    margin-bottom: 20px;
-    margin-top: 13px;
-  }
-  
-  .archive-btn {
-    margin-right: 10px;
-    
-  }
-  
-  .location{
-    cursor: pointer;
-  }
-  .add-btn{
-    cursor: pointer;
-  }
+  margin: 0 10px 10px 10px;
+}
+
+table {
+  width: 100%;
+}
+
+.add-new-site {
+  margin: 13px 20px 20px 0;
+}
+
+.images {
+  margin-right: 10px;
+  height: 80px;
+  cursor: pointer;
+}
+
+.mat-column-siteId {
+  flex: 0 0 100px;
+}
+
+.mat-column-location {
+  flex: 0 0 300px;
+}
+
+.mat-column-contractorId {
+  flex: 0 0 100px;
+}
+
+.mat-column-submittedOn {
+  flex: 0 0 150px;
+}
+
+.mat-column-map {
+  flex: 0 0 150px;
+}
+
+.input-new {
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.filter-select {
+  margin-right: 10px;
+}
+
+.archive-btn {
+  margin-right: 10px;
+}
+
+.location {
+  cursor: pointer;
+}
+
+.add-btn {
+  cursor: pointer;
+}
