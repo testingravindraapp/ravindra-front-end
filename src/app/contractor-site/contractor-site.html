@@ -1,0 +1,105 @@
+<div class="container">
+  <h3>
+      ADMIN DASHBOARD
+  </h3>
+  <div class="main">
+      <div class="add-sites">
+          <div *ngIf="showInput">
+              <button *ngIf="showInput" mat-raised-button (click)="addNewEntry()" class="add-new-site">Add</button>
+              <span *ngIf="showInput" style="width:35%;"></span>
+          </div>
+          <button *ngIf="!showInput" mat-raised-button (click)="OpenDialogToEnterSite()" class="add-new-site">Add new site</button>
+          <button mat-raised-button (click)="showContractors()" class="btn-contractor add-new-site">Contractors</button>
+          <button mat-raised-button (click)="loginService.Logout()" class="btn-contractor add-new-site">Logout</button>
+      </div>
+      <hr>
+      <button mat-raised-button #archiveBtn (click)="archive()" disabled class="archive-btn">Archive</button>
+      <button mat-raised-button (click)="showArchive()" class="archive-btn">View Archive</button>
+
+      <mat-form-field class="filter-select" style="width:200px;">
+          <mat-select placeholder="Select column to filter" [(value)]="selected">
+              <mat-option
+                  *ngFor="let item of [ {value: 'siteId', viewValue: 'Site Id'}, {value: 'address', viewValue: 'Address'}, {value: 'contractorId', viewValue: 'Contractor Id'}]"
+                  [value]="item.value">
+                  {{item.viewValue}}
+              </mat-option>
+          </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+
+      <div class="mat-elevation-z8">
+          <div style="position: relative">
+              <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
+          </div>
+          <table mat-table [dataSource]="dataSource" matSort>
+              <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                      </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox>
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="siteId" class="site-id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Id </th>
+
+                  <td mat-cell *matCellDef="let element"> {{element.siteId}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="address">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Address </th>
+                  <td mat-cell *matCellDef="let element"> {{element.address}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="map">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Coordinates </th>
+                  <td mat-cell *matCellDef="let element">
+                      <span *ngIf="element.lat_Long_True !== ''">{{element.lat_Long_True}}</span>
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="contractorId">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Contractor Id </th>
+                  <td mat-cell *matCellDef="let element"> {{element.contractorId}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="submittedOn">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.status}} {{element.submittedOn | date: 'dd-MMM-yyyy'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="image">
+                  <th mat-header-cell *matHeaderCellDef> Images </th>
+                  <td mat-cell *matCellDef="let element">
+                      <img *ngFor="let item of element.imageURL; let i = index" [src]="item" class="images"
+                          (click)="openDialog(element, i)">
+                  </td>
+
+              </ng-container>
+
+              <ng-container matColumnDef="edit">
+                  <th mat-header-cell *matHeaderCellDef> </th>
+                  <td mat-cell *matCellDef="let element">
+                      <mat-icon mat-list-icon class="add-btn" *ngIf="element.status === 'pending'"
+                          (click)="openSiteEdit(element)" title="Edit Data">edit</mat-icon>
+                  </td>
+
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+      </div>
+  </div>
+
+</div>

@@ -13,15 +13,17 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardService } from './services/dashboard.service';
 import { DialogComponent } from './dashboard/dialog/dialog.component';
 import { ArchiveDialogComponent } from './dashboard/archive-data/archive.component';
-import { ContractorDialogComponent } from './dashboard/contractor/contractor.component';
+import { ContractorsComponent } from './contractors/contractor.component';
 import { LocateComponent } from './dashboard/locate/locate.component';
 import { SiteDetailsComponent } from './comman/site-details/site-details.component';
 import { EditSiteComponent } from './dashboard/edit-site/edit.component';
+import { ContractorSiteComponent } from './contractor-site/contractor-site.component';
 
 import { SlickModule } from 'ngx-slick';
 import { NgxUiLoaderModule, NgxUiLoaderConfig } from 'ngx-ui-loader';
 import { SiteDetailDialogComponent } from './dashboard/site-detail-dialog/site-detail-dialog.component';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { ContractorService } from './services/contractor.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
@@ -35,12 +37,13 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     DashboardComponent,
     DialogComponent,
     ArchiveDialogComponent,
-    ContractorDialogComponent,
+    ContractorsComponent,
     LocateComponent,
     SiteDetailsComponent,
     EditSiteComponent,
     SiteDetailDialogComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    ContractorSiteComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SlickModule.forRoot(),
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [DashboardService,  {
+  providers: [
+    DashboardService,
+    ContractorService,
+    {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,
     multi: true
@@ -62,7 +68,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   entryComponents: [
     DialogComponent,
     ArchiveDialogComponent,
-    ContractorDialogComponent,
     LocateComponent,
     EditSiteComponent,
     SiteDetailDialogComponent

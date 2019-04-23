@@ -1,0 +1,28 @@
+<div class="container">
+
+    <mat-list>
+        <div>
+            <h3 mat-header>Contractors</h3>
+            <mat-icon mat-list-icon (click)="showInput = true" class="add-btn" title="Add Contractor">add</mat-icon>
+
+
+        </div>
+        <div>
+            <mat-form-field *ngIf="showInput" class="input-new">
+                <input matInput [(ngModel)]="newContr.name" placeholder="Contractor Name">
+            </mat-form-field>
+            <button mat-raised-button *ngIf="showInput" (click)="addContractor()" class="btn-contractor">Add
+                Contractor</button>
+        </div>
+
+        <mat-list-item *ngFor="let item of contractors" (click)="openDetails(item.contractorId)">
+            <div class="cont-item">
+                <mat-icon mat-list-icon>people</mat-icon>
+                <!-- <span mat-line class="text-cont">{{item.contractorId}}</span>  -->
+                <span mat-line class="text-cont">{{item.name}}</span>
+                <span mat-line class="text-cont">{{item.passcode}}</span>
+                <mat-icon mat-list-icon (click)="deleteContractor(item.contractorId)" class="delete-btn" title="Delete Contractor">delete</mat-icon>
+            </div>
+        </mat-list-item>
+    </mat-list>
+</div>

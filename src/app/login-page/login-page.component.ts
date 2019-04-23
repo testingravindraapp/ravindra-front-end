@@ -41,7 +41,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         console.log(this.loginData);
         if (this.loginData.token) {
           localStorage.setItem('token', this.loginData.token);
-          this.router.navigate(['/dashboard']);   // after successful login navigate to dashboard page.
+          this.router.navigate(['/contractors']);   // after successful login navigate to contractors page.
         } else {
           this.router.navigate(['/login']);
           alert('Invalid Username and Password');
