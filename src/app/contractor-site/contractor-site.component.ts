@@ -23,7 +23,7 @@ import { IContractor } from '../interfaces/contractor';
   styleUrls: ['./contractor-site.css']
 })
 export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnDestroy {
-  displayedColumns: string[] = ['select', 'address', 'map', 'contractorId', 'submittedOn', 'image', 'edit'];
+  displayedColumns: string[] = ['select', 'address', 'map', 'contractorId', 'submittedOn', 'image', 'approve', 'edit'];
   dataSource: MatTableDataSource<ISiteData>;
   archiveData: ISiteData[];
   selection = new SelectionModel<ISiteData>(true, []);
@@ -162,8 +162,10 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
   }
 
   addNewEntry() {
-    const maxId = this.dataSource.data
-      .reduce((max, p) => p.siteId > max ? p.siteId : max, this.dataSource.data[0].siteId);
+    const allSites = [...this.dataSource.data, ...this.archiveData];
+
+    const maxId = allSites
+      .reduce((max, p) => p.siteId > max ? p.siteId : max, allSites[0].siteId);
     this.newSite.siteId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
     if (this.newSite.siteId !== null && this.newSite.lat_Long_True !== '' && this.newSite.address !== '') {
       const newSite: ISiteData = {
@@ -176,8 +178,8 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
         address: this.newSite.address,
       };
       this.dashboardService.createNewSite(newSite).pipe(
-        map((data: ISiteData) => {
-          newSite._id = data._id;
+        map((data) => {
+          newSite._id = data._doc._id;
           const tmpdata = this.dataSource.data;
           tmpdata.unshift(newSite);
           this.dataSource.data = tmpdata;
@@ -190,7 +192,7 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
             lat_Long_True: '',
             address: '',
           };
-          this.snackBar.open(`New site with site id ${data.siteId} is added`, 'Ok', {
+          this.snackBar.open(`New site with site id ${data._doc.siteId} is added`, 'Ok', {
             duration: 4000,
           });
         })
@@ -220,13 +222,23 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
 
   OpenDialogToEnterSite() {
     const dialogRef = this.dialog.open(SiteDetailDialogComponent, { panelClass: 'my-panel' });
-    dialogRef.componentInstance['data'] = [this.newSite, this.contractorList];
+    this.newSite.contractorId = this.contractorId;
+    // this.newSite.contractorId = this.contractorId;
+
+    dialogRef.componentInstance['data'] = [this.newSite, this.contractorId, this.contractorName];
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.addNewEntry();
       }
     });
   }
+
+  approve(id) {
+    this.dashboardService.setApproved(id).subscribe(data => {
+      console.log(data);
+    });
+  }
+
   applyFilter(filterValue: string) {
     if (filterValue !== '') {
         const tableFilters = [];

@@ -20,7 +20,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
     styleUrls: ['./contractor.css']
 })
 export class ContractorsComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['name', 'passcode'];
+    displayedColumns: string[] = ['name', 'passcode', 'delete'];
     dataSource: MatTableDataSource<IContractor>;
     showInput = false;
     newContr: IContractor;
@@ -46,59 +46,64 @@ export class ContractorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.ngxService.startLoader('loader-01');
-        // this.activeContractors = JSON.parse(this.route.snapshot.params["activeContractors"]);
-        this.dashboardService.getActiveSites().pipe(
-            map(data => {
-                data.map((item, index) => {
-                    if (item.imageURL && item.imageURL !== '') {
-                        item.imageURL = item.imageURL.split(',');
-                    }
-                });
-                data.sort(function (a, b) {
-                    return b.siteId - a.siteId;
-                });
-                console.log('active data', data);
-                this.activeSites = data;
-                this.dataService.changeSiteData(data);
-                
-            }),
-            takeUntil(this.unsubscribe)
-        ).subscribe();
+        if (!this.activeSites) {
+            this.ngxService.startLoader('loader-01');
+            // this.activeContractors = JSON.parse(this.route.snapshot.params["activeContractors"]);
+            this.dashboardService.getActiveSites().pipe(
+                map(data => {
+                    data.map((item, index) => {
+                        if (item.imageURL && item.imageURL !== '') {
+                            item.imageURL = item.imageURL.split(',');
+                        }
+                    });
+                    data.sort(function (a, b) {
+                        return b.siteId - a.siteId;
+                    });
+                    console.log('active data', data);
+                    this.activeSites = data;
+                    this.dataService.changeSiteData(data);
+                }),
+                takeUntil(this.unsubscribe)
+            ).subscribe();
+        }
 
-        this.dashboardService.getArchivedSites().pipe(
-            map(data => {
-                data.map((item, index) => {
-                    if (item.imageURL && item.imageURL !== '') {
-                        item.imageURL = item.imageURL.split(',');
-                    }
-                });
-                console.log('archive data...', data);
-                data.sort(function (a, b) {
-                    return b.siteId - a.siteId;
-                });
-                this.archiveSites = data;
-                this.dataService.changeArchivedSiteData(data);
-            }),
-            takeUntil(this.unsubscribe)
-        ).subscribe();
+        if (!this.archiveSites) {
+            this.dashboardService.getArchivedSites().pipe(
+                map(data => {
+                    data.map((item, index) => {
+                        if (item.imageURL && item.imageURL !== '') {
+                            item.imageURL = item.imageURL.split(',');
+                        }
+                    });
+                    console.log('archive data...', data);
+                    data.sort(function (a, b) {
+                        return b.siteId - a.siteId;
+                    });
+                    this.archiveSites = data;
+                    this.dataService.changeArchivedSiteData(data);
+                }),
+                takeUntil(this.unsubscribe)
+            ).subscribe();
+        }
 
-        this.contractorService.getContractors().subscribe(data => {
-            console.log('ontractor', data);
-            // this.contractors = data;
-            this.dataSource = new MatTableDataSource(data);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-            this.dataService.setContractorData(this.dataSource.data);
-            if (this.dataSource.data.length === 0) {
-                this.newContr.contractorId = 1;
-            } else {
-                const maxId = this.dataSource.data
-                    .reduce((max, p) => p.contractorId > max ? p.contractorId : max, this.dataSource.data[0].contractorId);
-                this.newContr.contractorId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
-            }
-            this.ngxService.stopLoader('loader-01');
-        });
+        if (!this.dataSource) {
+            this.contractorService.getContractors().subscribe(data => {
+                console.log('ontractor', data);
+                // this.contractors = data;
+                this.dataSource = new MatTableDataSource(data);
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+                this.dataService.setContractorData(this.dataSource.data);
+                if (this.dataSource.data.length === 0) {
+                    this.newContr.contractorId = 1;
+                } else {
+                    const maxId = this.dataSource.data
+                        .reduce((max, p) => p.contractorId > max ? p.contractorId : max, this.dataSource.data[0].contractorId);
+                    this.newContr.contractorId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
+                }
+                this.ngxService.stopLoader('loader-01');
+            });
+        }
     }
 
     addContractor() {
@@ -122,7 +127,7 @@ export class ContractorsComponent implements OnInit, OnDestroy {
 
     deleteContractor(id) {
         event.stopPropagation();
-        const allSites = [...this.activeSites, ...this.archiveSites]
+        const allSites = [...this.activeSites, ...this.archiveSites];
         console.log('allSites', allSites);
 
         let activeContractors = this.removeDuplicates(allSites.map(item => {
@@ -130,7 +135,7 @@ export class ContractorsComponent implements OnInit, OnDestroy {
         }));
         activeContractors = activeContractors.filter(item => {
             return Number(item) === id;
-        })
+        });
 
         console.log('activeContractors', activeContractors);
         // const ind = activeContractors.indexOf(id.toString());
@@ -148,7 +153,7 @@ export class ContractorsComponent implements OnInit, OnDestroy {
             ).subscribe(data => {
                 console.log('deletedC', data);
             });
-            let newContData = this.dataSource.data;
+            const newContData = this.dataSource.data;
             newContData.splice(delInd, 1);
             this.dataSource.data = newContData;
             this.dataService.setContractorData(newContData);
@@ -166,7 +171,7 @@ export class ContractorsComponent implements OnInit, OnDestroy {
     }
 
     openDetails(contractorId, name) {
-        this.router.navigate(['/sitedetails', contractorId, name])
+        this.router.navigate(['/sitedetails', contractorId, name]);
     }
 
     removeDuplicates(arr) {
@@ -178,6 +183,4 @@ export class ContractorsComponent implements OnInit, OnDestroy {
         }
         return unique_array;
     }
-
-   
 }

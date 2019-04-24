@@ -11,7 +11,7 @@ export class SiteDetailDialogComponent implements OnInit {
 latitude: number;
 longitude: number;
   constructor(private dialogRef: MatDialogRef<SiteDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: [ISiteData, IContractor[]]) { }
+    @Inject(MAT_DIALOG_DATA) public data: [ISiteData, number, string]) { }
 
   ngOnInit() {
     console.log(this.data);

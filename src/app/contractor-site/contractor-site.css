@@ -56,3 +56,7 @@ table {
 .add-btn {
   cursor: pointer;
 }
+
+.approve-btn {
+  background-color: #5aac44;
+}

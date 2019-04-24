@@ -1,8 +1,8 @@
-<div>
-  <h3 class="heading">Login</h3>
+<div class="container">
+  <h3 class="heading">RE Admin Login</h3>
   <div class="login-content">
     <form [formGroup]="loginForm">
-      <div class="form-group" class="login-row">
+      <div class="form-group login-row">
         <mat-form-field class="full-width">
           <input matInput type="text" formControlName="email" placeholder="Enter Email">
           <mat-error
@@ -15,7 +15,7 @@
         </mat-form-field>
       </div>
 
-      <div class="form-group" class="login-row">
+      <div class="form-group login-row">
         <mat-form-field class="full-width">
           <input matInput type="password" formControlName="password" placeholder="Enter Password">
           <mat-error *ngIf="loginForm.controls.password.hasError('required')">

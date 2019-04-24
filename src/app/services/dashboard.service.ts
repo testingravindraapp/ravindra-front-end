@@ -167,4 +167,19 @@ export class DashboardService {
             })
         );
     }
+
+    public setApproved(id): Observable<any> {
+        const body = new URLSearchParams();
+        // body.set('location', newSite.location);
+        body.set('id', id);
+        console.log('createNewSite............................');
+        return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/setApproved?secret_token=${this.localStr}`,
+        body.toString(), this.options).pipe(
+            map(this.extractDataRes),
+            catchError((err: any) => {
+                alert('Something went wrong. Please try again later.');
+                return err;
+            })
+        );
+    }
 }

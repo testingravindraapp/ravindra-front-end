@@ -24,3 +24,6 @@ table {
 .mat-column-submittedOn {
   flex: 0 0 150px;
 }
+.container {
+  padding: 30px;
+}

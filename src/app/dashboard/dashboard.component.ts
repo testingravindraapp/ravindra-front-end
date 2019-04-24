@@ -354,7 +354,7 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
 
     OpenDialogToEnterSite() {
         const dialogRef = this.dialog.open(SiteDetailDialogComponent, { panelClass: 'my-panel' });
-        dialogRef.componentInstance['data'] = [this.newSite, this.contractorsList];
+        // dialogRef.componentInstance['data'] = [this.newSite, this.contractorsList];
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.addNewEntry();

@@ -17,13 +17,13 @@
       <input matInput [(ngModel)]="longitude" name="longitude" placeholder="Enter Longitude" (change)="setLatLong()" type="number" required>
     </mat-form-field><br>
 
-    <mat-label><strong>ContractorId: </strong></mat-label>
+    <!-- <mat-label><strong>ContractorId: </strong></mat-label>
     <mat-form-field>
       <mat-select name="contractor" placeholder="Select Contractor Id" [(value)]="data[0].contractorId">
         <mat-option *ngFor="let contractor of data[1]" [value]="contractor.contractorId">{{contractor.contractorId}}:
           {{contractor.name}}</mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
   </mat-dialog-content>
 
   <mat-dialog-actions>

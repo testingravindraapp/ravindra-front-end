@@ -1,6 +1,7 @@
 .btn-contractor {
     margin-bottom: 20px;
     margin-top: 13px;
+    cursor: pointer;
 }
 .container {
     background-color: #e3eefc;
