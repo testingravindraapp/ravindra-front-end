@@ -14,11 +14,11 @@ import { SiteDetailDialogComponent } from '../dashboard/site-detail-dialog/site-
 export class HeaderComponent {
   public dialog: MatDialog;
 
-  constructor(private router: Router,
+  constructor(public router: Router,
     public loginService: LoginService, ) { }
 
   showContractors() {
-    this.router.navigate(['/contractors'])
+    this.router.navigate(['/contractors']);
   }
 
 }

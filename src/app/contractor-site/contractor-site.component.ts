@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterContentChecked } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -22,7 +22,7 @@ import { IContractor } from '../interfaces/contractor';
   templateUrl: './contractor-site.html',
   styleUrls: ['./contractor-site.css']
 })
-export class ContractorSiteComponent implements OnInit, OnDestroy {
+export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnDestroy {
   displayedColumns: string[] = ['select', 'address', 'map', 'contractorId', 'submittedOn', 'image', 'edit'];
   dataSource: MatTableDataSource<ISiteData>;
   archiveData: ISiteData[];
@@ -31,6 +31,7 @@ export class ContractorSiteComponent implements OnInit, OnDestroy {
   contractorName: string;
   newSite: ISiteData;
   contractorList: IContractor[];
+  selected = '';
 
   private unsubscribe: Subject<void> = new Subject();
   @ViewChild(MatSort) sort: MatSort;
@@ -54,10 +55,10 @@ export class ContractorSiteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.contractorId = Number(this.route.snapshot.params["contractorId"]);
-    this.contractorName = this.route.snapshot.params["name"];
+    this.contractorId = Number(this.route.snapshot.params['contractorId']);
+    this.contractorName = this.route.snapshot.params['name'];
     this.dataService.contractorData.subscribe(data => {
-      this.contractorList = data
+      this.contractorList = data;
     });
     this.dataService.currentSiteData.pipe(
       takeUntil(this.unsubscribe)
@@ -69,7 +70,7 @@ export class ContractorSiteComponent implements OnInit, OnDestroy {
 
       data = archSiteData.filter(item => {
         return Number(item.contractorId) === this.contractorId;
-      })
+      });
       data.sort(function (a, b) {
         return b.siteId - a.siteId;
       });
@@ -168,7 +169,7 @@ export class ContractorSiteComponent implements OnInit, OnDestroy {
       const newSite: ISiteData = {
         siteId: this.newSite.siteId,
         contractorId: this.newSite.contractorId,
-        image: null, 
+        image: null,
         submittedOn: null,
         status: 'pending',
         lat_Long_True: this.newSite.lat_Long_True.trim(),
@@ -226,4 +227,20 @@ export class ContractorSiteComponent implements OnInit, OnDestroy {
       }
     });
   }
+  applyFilter(filterValue: string) {
+    if (filterValue !== '') {
+        const tableFilters = [];
+        tableFilters.push({
+            id: this.selected,
+            value: filterValue
+        });
+        // this.dataSource.filter = filterValue.trim().toLowerCase();
+        this.dataSource.filter = JSON.stringify(tableFilters);
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    } else {
+        this.dataSource.filter = '';
+    }
+}
 }

@@ -18,6 +18,7 @@ import { LocateComponent } from './dashboard/locate/locate.component';
 import { SiteDetailsComponent } from './comman/site-details/site-details.component';
 import { EditSiteComponent } from './dashboard/edit-site/edit.component';
 import { ContractorSiteComponent } from './contractor-site/contractor-site.component';
+import { ContractorDialogComponent } from './dashboard/contractor/contractor.component';
 
 import { SlickModule } from 'ngx-slick';
 import { NgxUiLoaderModule, NgxUiLoaderConfig } from 'ngx-ui-loader';
@@ -45,7 +46,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SiteDetailDialogComponent,
     LoginPageComponent,
     ContractorSiteComponent,
-    HeaderComponent
+    HeaderComponent,
+    ContractorDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +74,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ArchiveDialogComponent,
     LocateComponent,
     EditSiteComponent,
-    SiteDetailDialogComponent
+    SiteDetailDialogComponent,
+    ContractorDialogComponent
   ]
 })
 
