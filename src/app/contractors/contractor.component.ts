@@ -20,7 +20,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
     styleUrls: ['./contractor.css']
 })
 export class ContractorsComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['name', 'passcode', 'delete'];
+    displayedColumns: string[] = ['id', 'name', 'passcode', 'delete'];
     dataSource: MatTableDataSource<IContractor>;
     showInput = false;
     newContr: IContractor;
@@ -46,54 +46,11 @@ export class ContractorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (!this.activeSites) {
-            this.ngxService.startLoader('loader-01');
-            // this.activeContractors = JSON.parse(this.route.snapshot.params["activeContractors"]);
-            this.dashboardService.getActiveSites().pipe(
-                map(data => {
-                    data.map((item, index) => {
-                        if (item.imageURL && item.imageURL !== '') {
-                            item.imageURL = item.imageURL.split(',');
-                        }
-                    });
-                    data.sort(function (a, b) {
-                        return b.siteId - a.siteId;
-                    });
-                    console.log('active data', data);
-                    this.activeSites = data;
-                    this.dataService.changeSiteData(data);
-                }),
-                takeUntil(this.unsubscribe)
-            ).subscribe();
-        }
-
-        if (!this.archiveSites) {
-            this.dashboardService.getArchivedSites().pipe(
-                map(data => {
-                    data.map((item, index) => {
-                        if (item.imageURL && item.imageURL !== '') {
-                            item.imageURL = item.imageURL.split(',');
-                        }
-                    });
-                    console.log('archive data...', data);
-                    data.sort(function (a, b) {
-                        return b.siteId - a.siteId;
-                    });
-                    this.archiveSites = data;
-                    this.dataService.changeArchivedSiteData(data);
-                }),
-                takeUntil(this.unsubscribe)
-            ).subscribe();
-        }
-
-        if (!this.dataSource) {
-            this.contractorService.getContractors().subscribe(data => {
-                console.log('ontractor', data);
-                // this.contractors = data;
+        this.dataService.contractorData.subscribe(data => {
+            if (data) {
                 this.dataSource = new MatTableDataSource(data);
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
-                this.dataService.setContractorData(this.dataSource.data);
                 if (this.dataSource.data.length === 0) {
                     this.newContr.contractorId = 1;
                 } else {
@@ -101,9 +58,78 @@ export class ContractorsComponent implements OnInit, OnDestroy {
                         .reduce((max, p) => p.contractorId > max ? p.contractorId : max, this.dataSource.data[0].contractorId);
                     this.newContr.contractorId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
                 }
-                this.ngxService.stopLoader('loader-01');
-            });
-        }
+
+            } else {
+                this.contractorService.getContractors().subscribe(data => {
+                    console.log('ontractor', data);
+                    // this.contractors = data;
+                    this.dataSource = new MatTableDataSource(data);
+                    this.dataSource.sort = this.sort;
+                    this.dataSource.paginator = this.paginator;
+                   
+                    this.dataService.setContractorData(this.dataSource.data);
+                    if (this.dataSource.data.length === 0) {
+                        this.newContr.contractorId = 1;
+                    } else {
+                        const maxId = this.dataSource.data
+                            .reduce((max, p) => p.contractorId > max ? p.contractorId : max, this.dataSource.data[0].contractorId);
+                        this.newContr.contractorId = maxId.toString() !== 'null' ? Number(maxId) + 1 : 1;
+                    }
+                    this.ngxService.stopLoader('loader-01');
+                });
+            }
+        });
+        this.dataService.currentSiteData.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(currSiteData => {
+            if (currSiteData) {
+                this.activeSites = currSiteData;
+            } else {
+                this.ngxService.startLoader('loader-01');
+                // this.activeContractors = JSON.parse(this.route.snapshot.params["activeContractors"]);
+                this.dashboardService.getActiveSites().pipe(
+                    map(data => {
+                        data.map((item, index) => {
+                            if (item.imageURL && item.imageURL !== '') {
+                                item.imageURL = item.imageURL.split(',');
+                            }
+                        });
+                        data.sort(function (a, b) {
+                            return b.siteId - a.siteId;
+                        });
+                        console.log('active data', data);
+                        this.activeSites = data;
+                        this.dataService.changeSiteData(data);
+                    }),
+                    takeUntil(this.unsubscribe)
+                ).subscribe();
+            }
+        });
+        this.dataService.currentArchivedSiteData.pipe(
+            takeUntil(this.unsubscribe)
+        ).subscribe(siteData => {
+            if (siteData) {
+                this.archiveSites = siteData;
+            } else {
+                this.dashboardService.getArchivedSites().pipe(
+                    map(data => {
+                        data.map((item, index) => {
+                            if (item.imageURL && item.imageURL !== '') {
+                                item.imageURL = item.imageURL.split(',');
+                            }
+                        });
+                        console.log('archive data...', data);
+                        data.sort(function (a, b) {
+                            return b.siteId - a.siteId;
+                        });
+                        this.archiveSites = data;
+                        this.dataService.changeArchivedSiteData(data);
+                    }),
+                    takeUntil(this.unsubscribe)
+                ).subscribe();
+            }
+        });
+
     }
 
     addContractor() {
@@ -134,7 +160,7 @@ export class ContractorsComponent implements OnInit, OnDestroy {
             return item.contractorId;
         }));
         activeContractors = activeContractors.filter(item => {
-            return Number(item) === id;
+            return Number(item) === Number(id);
         });
 
         console.log('activeContractors', activeContractors);
@@ -182,5 +208,18 @@ export class ContractorsComponent implements OnInit, OnDestroy {
             }
         }
         return unique_array;
+    }
+
+
+    applyFilter(filterValue: string) {
+        if (filterValue !== '') {
+         
+            this.dataSource.filter = filterValue.trim().toLowerCase();
+            if (this.dataSource.paginator) {
+                this.dataSource.paginator.firstPage();
+            }
+        } else {
+            this.dataSource.filter = '';
+        }
     }
 }

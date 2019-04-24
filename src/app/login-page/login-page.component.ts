@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material';
 import { LoginService } from '../services/login.service';
 import { ILogin } from '../interfaces/login';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -24,7 +25,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   public loginData: ILogin;
 
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private loginService: LoginService) { }
+  constructor(private formBuilder: FormBuilder, 
+  private router: Router, 
+  private loginService: LoginService,
+  private ngxService: NgxUiLoaderService) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -34,7 +38,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   public loginUser(user): void {
-    console.log(user);
+     this.ngxService.startLoader('loader-01');
     this.login$ = this.loginService.loginUser(user).subscribe(
       (data: ILogin) => {
         this.loginData = data;
@@ -46,8 +50,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           alert('Invalid Username and Password');
         }
+        this.ngxService.stopLoader('loader-01');
       },
-      error => alert('Invalid userId or password')
+      error => {
+         this.ngxService.stopLoader('loader-01');
+        alert('Invalid userId or password')
+      }
     );
   }
 

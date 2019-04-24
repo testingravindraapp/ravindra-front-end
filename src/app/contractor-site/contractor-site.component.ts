@@ -241,18 +241,18 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
 
   applyFilter(filterValue: string) {
     if (filterValue !== '') {
-        const tableFilters = [];
-        tableFilters.push({
-            id: this.selected,
-            value: filterValue
-        });
-        // this.dataSource.filter = filterValue.trim().toLowerCase();
-        this.dataSource.filter = JSON.stringify(tableFilters);
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
-        }
+      const tableFilters = [];
+      tableFilters.push({
+        id: this.selected,
+        value: filterValue
+      });
+      // this.dataSource.filter = filterValue.trim().toLowerCase();
+      this.dataSource.filter = JSON.stringify(tableFilters);
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
     } else {
-        this.dataSource.filter = '';
+      this.dataSource.filter = '';
     }
-}
+  }
 }
