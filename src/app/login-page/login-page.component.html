@@ -1,9 +1,10 @@
+
 <div class="container">
-
+  
   <div class="login-content">
-    <img src="../../assets/REIcon.png" class="icon-re">
-    <h3 class="heading">RE Admin Login</h3>
-
+      <img src="../../assets/REIcon.png" class="icon-re">
+  <h3 class="heading">RE Admin Login</h3>
+ 
     <form [formGroup]="loginForm">
       <div class="form-group login-row">
         <mat-form-field class="full-width">
@@ -26,9 +27,9 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div style="position: relative">
-        <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
-      </div>
+<div style="position: relative">
+            <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
+        </div>
       <div>
         <button mat-raised-button class="login-button" [disabled]="!loginForm.valid"
           (click)="loginUser(loginForm.value)">Login</button>
@@ -37,3 +38,4 @@
     </form>
   </div>
 </div>
+

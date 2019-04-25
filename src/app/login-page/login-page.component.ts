@@ -54,7 +54,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       },
       error => {
          this.ngxService.stopLoader('loader-01');
-        alert('Invalid userId or password');
+        alert('Invalid userId or password')
       }
     );
   }
