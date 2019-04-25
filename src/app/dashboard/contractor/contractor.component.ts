@@ -23,7 +23,8 @@ export class ContractorDialogComponent implements OnInit, OnDestroy {
         @Inject(MAT_DIALOG_DATA) public contractors: [IContractor[], string[]]) {
         this.newContr = {
             name: '',
-            contractorId: null
+            contractorId: null,
+            contactNum: null
         };
     }
 
@@ -43,15 +44,16 @@ export class ContractorDialogComponent implements OnInit, OnDestroy {
 
     addContractor() {
         if (this.newContr.name !== '') {
-            this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name).pipe(
+            this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name, this.newContr.contactNum).pipe(
                 map(result => {
                     console.log(result);
                     const data = this.contractors[0];
-                    data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId, _id: result._id });
+                    data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId, _id: result._id, contactNum: this.newContr.contactNum });
                     this.contractors[0] = data;
                     this.newContr = {
                         name: '',
-                        contractorId: Number(this.newContr.contractorId) + 1
+                        contractorId: Number(this.newContr.contractorId) + 1,
+                        contactNum: null
                     };
                 }),
                 takeUntil(this.unsubscribe)

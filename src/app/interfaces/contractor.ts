@@ -3,5 +3,6 @@ export interface IContractor {
     contractorId: number;
     name: string;
     passcode?: number;
+    contactNum: number;
 }
 

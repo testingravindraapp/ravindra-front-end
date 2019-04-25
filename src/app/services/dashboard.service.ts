@@ -118,10 +118,11 @@ export class DashboardService {
         );
     }
 
-    public addContractors(contractorId, name): Observable<any> {
+    public addContractors(contractorId, name, contactNum): Observable<any> {
         const body = new URLSearchParams();
         body.set('contractorId', contractorId);
         body.set('name', name);
+        body.set('contactNum', contactNum);
 
         console.log('addContractors............................');
         return this.http.post(`${AppSettings.SERVICE_BASE_URL}/api/addContractors?secret_token=${this.localStr}`,

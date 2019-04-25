@@ -32,7 +32,10 @@ h2 {
 .container {
     padding: 0px 80px 20px 80px;
 }
-
+.no-contractor {
+    padding-top: 10px;
+    text-align: center;
+}
 .mat-row:hover {
     cursor: pointer;
     background-color: #e4e3e3;

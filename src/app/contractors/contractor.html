@@ -1,13 +1,16 @@
-<app-header></app-header>
+<app-header ></app-header>
+
 <div class="container">
     <div>
         <mat-form-field class="input-new">
             <input matInput [(ngModel)]="newContr.name" placeholder="Contractor Name">
         </mat-form-field>
+        <mat-form-field class="input-new">
+            <input matInput [(ngModel)]="newContr.contactNum" placeholder="Contact Number" maxlength="10">
+        </mat-form-field>
         <button mat-raised-button (click)="addContractor()" class="btn-contractor">Add
             Contractor</button>
         <h2 mat-header>List of Contractors</h2>
-
 
         <div>
             <mat-form-field>
@@ -20,6 +23,7 @@
         <div style="position: relative">
             <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
         </div>
+        <div *ngIf="!dataSource.data.length" class="no-contractor">There are no contractors to display.</div>
         <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="id" class="site-id">
@@ -32,6 +36,12 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Contractor Name </th>
 
                 <td mat-cell *matCellDef="let element"> {{element.name | titlecase}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="contactNum" class="site-id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Contact Number </th>
+
+                <td mat-cell *matCellDef="let element"> {{element.contactNum}} </td>
             </ng-container>
 
             <ng-container matColumnDef="passcode">

@@ -33,6 +33,7 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
   newSite: ISiteData;
   contractorList: IContractor[];
   selected = '';
+  selectedSiteId: number;
   public spinner: boolean;
 
   private unsubscribe: Subject<void> = new Subject();
@@ -65,33 +66,36 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
     });
     this.dataService.currentSiteData.pipe(
       takeUntil(this.unsubscribe)
-    ).subscribe(archSiteData => {
-      let data: ISiteData[] = [];
-      // archSiteData.forEach(element => {
-      //   data.push(element);
-      // });
-
-      data = archSiteData.filter(item => {
-        return Number(item.contractorId) === this.contractorId;
-      });
-      data.sort(function (a, b) {
-        return b.siteId - a.siteId;
-      });
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.filterPredicate = (dataX: any, filtersJson: string) => {
-        const matchFilter = [];
-        const filters = JSON.parse(filtersJson);
-        filters.forEach(filter => {
-          const val = dataX[filter.id] === null ? '' : dataX[filter.id];
-          if (val !== undefined) {
-            matchFilter.push(val.toLowerCase().includes(filter.value.toLowerCase()));
-          }
+    ).subscribe(currSiteData => {
+      if (currSiteData) {
+        let data: ISiteData[] = [];
+        // currSiteData.forEach(element => {
+        //   data.push(element);
+        // });
+  
+        data = currSiteData.filter(item => {
+          return Number(item.contractorId) === this.contractorId;
         });
-        return matchFilter.every(Boolean);
-      };
-      // }
+        data.sort(function (a, b) {
+          return b.siteId - a.siteId;
+        });
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.filterPredicate = (dataX: any, filtersJson: string) => {
+          const matchFilter = [];
+          const filters = JSON.parse(filtersJson);
+          filters.forEach(filter => {
+            const val = dataX[filter.id] === null ? '' : dataX[filter.id];
+            if (val !== undefined) {
+              matchFilter.push(val.toLowerCase().includes(filter.value.toLowerCase()));
+            }
+          });
+          return matchFilter.every(Boolean);
+        };
+      } else {
+        this.dataSource = new MatTableDataSource([]);
+      }
     });
     this.dataService.currentArchivedSiteData.pipe(
       takeUntil(this.unsubscribe)
@@ -236,11 +240,16 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
     });
   }
 
-  approve(id) {
+  approve(id, siteId) {
     this.spinner = true;
+    this.selectedSiteId = siteId;
     this.dashboardService.setApproved(id).subscribe(data => {
       if (data) {
         this.spinner = false;
+        let tempData  = this.dataSource.data;
+        let ind = tempData.findIndex(data => data._id === id);
+        tempData[ind].status = "Approved";
+        this.dataSource.data = tempData; 
         console.log(data);
       }
     });

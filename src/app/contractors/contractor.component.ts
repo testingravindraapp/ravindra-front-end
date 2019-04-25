@@ -20,7 +20,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
     styleUrls: ['./contractor.css']
 })
 export class ContractorsComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'name', 'passcode', 'delete'];
+    displayedColumns: string[] = ['id', 'name', 'contactNum', 'passcode', 'delete'];
     dataSource: MatTableDataSource<IContractor>;
     showInput = false;
     newContr: IContractor;
@@ -41,7 +41,8 @@ export class ContractorsComponent implements OnInit, OnDestroy {
         this.newContr = {
             name: '',
             contractorId: null,
-            passcode: null
+            passcode: null,
+            contactNum: null
         };
     }
 
@@ -134,16 +135,17 @@ export class ContractorsComponent implements OnInit, OnDestroy {
 
     addContractor() {
         if (this.newContr.name !== '') {
-            this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name).pipe(
+            this.dashboardService.addContractors(this.newContr.contractorId, this.newContr.name, this.newContr.contactNum).pipe(
                 map(result => {
                     console.log(result);
                     const data = this.dataSource.data;
-                    data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId, _id: result._id, passcode: result.passcode });
+                    data.push({ name: this.newContr.name, contractorId: this.newContr.contractorId, _id: result._id, passcode: result.passcode, contactNum: result.contactNum });
                     this.dataSource.data = data;
                     this.dataService.setContractorData(data);
                     this.newContr = {
                         name: '',
-                        contractorId: Number(this.newContr.contractorId) + 1
+                        contractorId: Number(this.newContr.contractorId),
+                        contactNum: null
                     };
                 }),
                 takeUntil(this.unsubscribe)

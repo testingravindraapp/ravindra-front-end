@@ -15,7 +15,10 @@ table {
   height: 80px;
   cursor: pointer;
 }
-
+.no-contractor {
+  padding-top: 10px;
+  text-align: center;
+}
 .mat-column-siteId {
   flex: 0 0 100px;
 }
