@@ -27,6 +27,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { ContractorService } from './services/contractor.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { HeaderComponent } from './header/header.component';
+import { AuthGuard } from './services/auth.guard';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   fgsColor: '#ffd740',
@@ -57,12 +59,14 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     FormsModule,
     ReactiveFormsModule,
     AppMaterialModule,
+    MatProgressSpinnerModule,
     SlickModule.forRoot(),
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
   providers: [
     DashboardService,
     ContractorService,
+    AuthGuard,
     {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,

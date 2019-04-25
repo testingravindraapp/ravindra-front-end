@@ -16,6 +16,7 @@ import { DialogComponent } from '../dashboard/dialog/dialog.component';
 import { ArchiveDialogComponent } from '../dashboard/archive-data/archive.component';
 import { SiteDetailDialogComponent } from '../dashboard/site-detail-dialog/site-detail-dialog.component';
 import { IContractor } from '../interfaces/contractor';
+import { EditSiteComponent } from '../dashboard/edit-site/edit.component';
 
 @Component({
   selector: 'app-contractor-site',
@@ -23,7 +24,7 @@ import { IContractor } from '../interfaces/contractor';
   styleUrls: ['./contractor-site.css']
 })
 export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnDestroy {
-  displayedColumns: string[] = ['select', 'address', 'map', 'contractorId', 'submittedOn', 'image', 'approve', 'edit'];
+  displayedColumns: string[] = ['select', 'address', 'map', 'contractorId', 'submittedOn', 'status', 'image', 'edit'];
   dataSource: MatTableDataSource<ISiteData>;
   archiveData: ISiteData[];
   selection = new SelectionModel<ISiteData>(true, []);
@@ -32,6 +33,7 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
   newSite: ISiteData;
   contractorList: IContractor[];
   selected = '';
+  public spinner: boolean;
 
   private unsubscribe: Subject<void> = new Subject();
   @ViewChild(MatSort) sort: MatSort;
@@ -55,6 +57,7 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
   }
 
   ngOnInit() {
+    this.spinner = false;
     this.contractorId = Number(this.route.snapshot.params['contractorId']);
     this.contractorName = this.route.snapshot.params['name'];
     this.dataService.contractorData.subscribe(data => {
@@ -234,25 +237,43 @@ export class ContractorSiteComponent implements OnInit, AfterContentChecked, OnD
   }
 
   approve(id) {
+    this.spinner = true;
     this.dashboardService.setApproved(id).subscribe(data => {
-      console.log(data);
+      if (data) {
+        this.spinner = false;
+        console.log(data);
+      }
     });
   }
 
   applyFilter(filterValue: string) {
     if (filterValue !== '') {
-        const tableFilters = [];
-        tableFilters.push({
-            id: this.selected,
-            value: filterValue
-        });
-        // this.dataSource.filter = filterValue.trim().toLowerCase();
-        this.dataSource.filter = JSON.stringify(tableFilters);
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
-        }
+      const tableFilters = [];
+      tableFilters.push({
+        id: this.selected,
+        value: filterValue
+      });
+      // this.dataSource.filter = filterValue.trim().toLowerCase();
+      this.dataSource.filter = JSON.stringify(tableFilters);
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
     } else {
-        this.dataSource.filter = '';
+      this.dataSource.filter = '';
     }
-}
+  }
+
+  openSiteEdit(data: ISiteData) {
+    data.contractorId = this.contractorId;
+    const dialogRef = this.dialog.open(EditSiteComponent, {
+      width: '450px',
+      height: '340px',
+      data: [data, []]
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      // this.archiveData.length = 0;
+      console.log('The dialog was closed');
+    });
+
+  }
 }

@@ -341,8 +341,8 @@ export class DashboardComponent implements OnInit, AfterContentChecked, OnDestro
 
     openSiteEdit(data: ISiteData) {
         const dialogRef = this.dialog.open(EditSiteComponent, {
-            width: '300px',
-            height: '330px',
+            width: '450px',
+            height: '400px',
             data: [data, this.contractorsList]
         });
         dialogRef.afterClosed().subscribe(result => {

@@ -9,7 +9,7 @@
         <input matInput [(ngModel)]="data[0].lat_Long_True" placeholder="Latitude, Longitude" required>
     </mat-form-field>
 
-    <mat-form-field class="input-change">
+    <mat-form-field class="input-change" *ngIf="data[1].length > 0">
         <mat-select placeholder="Contractor Id" [(value)]="data[0].contractorId" required>
             <mat-option *ngFor="let item of data[1]" [value]="item.contractorId">
                 {{item.contractorId}} : {{item.name}}

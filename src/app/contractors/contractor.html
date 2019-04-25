@@ -1,14 +1,19 @@
 <app-header></app-header>
 <div class="container">
     <div>
-        <h2 mat-header>List of Contractors</h2>
-        <!-- <mat-icon mat-list-icon (click)="showInput = true" class="add-btn" title="Add Contractor">add</mat-icon> -->
         <mat-form-field class="input-new">
             <input matInput [(ngModel)]="newContr.name" placeholder="Contractor Name">
         </mat-form-field>
         <button mat-raised-button (click)="addContractor()" class="btn-contractor">Add
             Contractor</button>
+        <h2 mat-header>List of Contractors</h2>
 
+
+        <div>
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Contractor">
+            </mat-form-field>
+        </div>
     </div>
 
     <div class="mat-elevation-z8">
@@ -16,6 +21,12 @@
             <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
         </div>
         <table mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="id" class="site-id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Contractor Id </th>
+
+                <td mat-cell *matCellDef="let element"> {{element.contractorId}} </td>
+            </ng-container>
 
             <ng-container matColumnDef="name" class="site-id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Contractor Name </th>
@@ -25,17 +36,19 @@
 
             <ng-container matColumnDef="passcode">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Passcode </th>
-                <td mat-cell *matCellDef="let element"> <span  class="passcode-spn">{{element.passcode}}</span>
+                <td mat-cell *matCellDef="let element"> <span class="passcode-spn">{{element.passcode}}</span>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="delete">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
-                    <td mat-cell *matCellDef="let element">
-                        <span><mat-icon mat-list-icon (click)="deleteContractor(element.contractorId)" class="delete-btn"
-                            title="Delete Contractor">delete</mat-icon></span>
-                    </td>
-                </ng-container>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>
+                        <mat-icon mat-list-icon (click)="deleteContractor(element.contractorId)" class="delete-btn"
+                            title="Delete Contractor">delete</mat-icon>
+                    </span>
+                </td>
+            </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"

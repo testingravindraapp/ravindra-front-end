@@ -1,10 +1,13 @@
 <div class="container">
-  <h3 class="heading">RE Admin Login</h3>
+
   <div class="login-content">
+    <img src="../../assets/REIcon.png" class="icon-re">
+    <h3 class="heading">RE Admin Login</h3>
+
     <form [formGroup]="loginForm">
       <div class="form-group login-row">
         <mat-form-field class="full-width">
-          <input matInput type="text" formControlName="email" placeholder="Enter Email">
+          <input matInput type="text" formControlName="email" placeholder="Email">
           <mat-error
             *ngIf="loginForm.controls.email.hasError('email') && !loginForm.controls.email.hasError('required')">
             Please enter a valid email address
@@ -17,13 +20,15 @@
 
       <div class="form-group login-row">
         <mat-form-field class="full-width">
-          <input matInput type="password" formControlName="password" placeholder="Enter Password">
+          <input matInput type="password" formControlName="password" placeholder="Password">
           <mat-error *ngIf="loginForm.controls.password.hasError('required')">
             Password is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
-
+      <div style="position: relative">
+        <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
+      </div>
       <div>
         <button mat-raised-button class="login-button" [disabled]="!loginForm.valid"
           (click)="loginUser(loginForm.value)">Login</button>
